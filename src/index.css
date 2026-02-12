@@ -1,0 +1,142 @@
+/* CSS Variables for Dark Theme with Elemental Neon Accents */
+:root {
+    /* Background */
+    --bg-dark: #212529;
+
+    /* Neon Accents */
+    --neon-fire: #ff6b35;
+    --neon-water: #00d9ff;
+    --neon-earth: #7cb342;
+    --neon-air: #e0e0e0;
+    --neon-primary: #FFA500;
+
+    /* Text Colors */
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+
+    /* Border */
+    --border-color: #444;
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+/* SNES.css Overrides for Dark Theme */
+.nes-input {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.nes-input:focus {
+    border-color: var(--neon-primary) !important;
+    box-shadow: 0 0 10px rgba(204, 132, 0, 0.5) !important;
+}
+
+.nes-btn {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nes-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nes-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.nes-btn.is-primary {
+    background-color: var(--neon-primary) !important;
+    border-color: var(--neon-primary) !important;
+}
+
+.nes-btn.is-error {
+    background-color: var(--neon-fire) !important;
+    border-color: var(--neon-fire) !important;
+}
+
+.nes-btn.is-warning {
+    background-color: #ffa500 !important;
+    border-color: #ffa500 !important;
+}
+
+.nes-btn.is-success {
+    background-color: var(--neon-earth) !important;
+    border-color: var(--neon-earth) !important;
+}
+
+.nes-progress {
+    height: 24px !important;
+}
+
+.nes-progress.is-error::-webkit-progress-value {
+    background-color: var(--neon-fire) !important;
+}
+
+.nes-progress.is-warning::-webkit-progress-value {
+    background-color: #ffa500 !important;
+}
+
+.nes-progress.is-success::-webkit-progress-value {
+    background-color: var(--neon-earth) !important;
+}
+
+.nes-container.is-dark {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-primary);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+}

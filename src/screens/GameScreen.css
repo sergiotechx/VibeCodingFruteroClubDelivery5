@@ -1,0 +1,182 @@
+.game-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--bg-dark);
+}
+
+.game-container {
+    max-width: 500px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 3px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.pet-name {
+    font-size: 1.8rem;
+    margin: 0;
+    color: var(--neon-primary);
+    text-shadow: 0 0 15px var(--neon-primary);
+}
+
+.header-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.control-btn {
+    font-size: 1.2rem;
+    padding: 0.3rem 0.6rem;
+}
+
+.pet-display {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.pet-sprite-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+}
+
+.pet-sprite {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.pet-sprite.floating {
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.pet-stage-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.stats-section {
+    margin-bottom: 1.5rem;
+}
+
+.stat-row {
+    margin-bottom: 1rem;
+}
+
+.stat-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.stat-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-bar-container progress {
+    flex: 1;
+}
+
+.stat-value {
+    min-width: 2.5rem;
+    text-align: right;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.actions-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.action-btn {
+    font-size: 0.9rem;
+    padding: 0.75rem 0.5rem;
+    white-space: nowrap;
+}
+
+.action-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.death-message {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.death-message .nes-container {
+    padding: 1rem;
+}
+
+.death-message p {
+    margin: 0.5rem 0;
+    color: var(--text-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .game-container {
+        padding: 1rem;
+    }
+
+    .pet-name {
+        font-size: 1.4rem;
+    }
+
+    .pet-sprite-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    .actions-section {
+        grid-template-columns: 1fr;
+    }
+
+    .action-btn {
+        font-size: 1rem;
+    }
+}
