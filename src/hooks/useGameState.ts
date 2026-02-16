@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
 import type { GameState, PetType, PetStage } from '../types/game';
 import { getStage } from '../utils/spriteResolver';
+import { db } from '../services/supabase';
 
-const STORAGE_KEY = 'elemon_game_state';
+// const STORAGE_KEY = 'elemon_game_state'; // Removed
 const DECAY_INTERVAL = 10000; // 10 seconds
 const DEATH_THRESHOLD = 60000; // 60 seconds at 0
 
@@ -13,6 +15,7 @@ const INITIAL_STATE: Omit<GameState, 'petName' | 'petType'> = {
         happiness: 100,
         energy: 100,
     },
+    coins: 100,
     birthTime: Date.now(),
     lastUpdate: Date.now(),
     deathTimer: null,
@@ -20,30 +23,85 @@ const INITIAL_STATE: Omit<GameState, 'petName' | 'petType'> = {
 };
 
 export function useGameState() {
+    const { user } = usePrivy();
     const [gameState, setGameState] = useState<GameState | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Load state from localStorage on mount
+    // Load state from Supabase on mount/auth
     useEffect(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
+        if (!user?.id) {
+            setIsLoading(false);
+            return;
+        }
+
+        const loadGame = async () => {
             try {
-                const parsed = JSON.parse(saved) as GameState;
-                setGameState(parsed);
-            } catch (error: unknown) {
-                console.error('Failed to load game state:', error);
-            }
-        }
-    }, []);
+                setIsLoading(true);
+                const userData = await db.getUser(user.id);
 
-    // Save state to localStorage whenever it changes
+                if (userData?.pets) {
+                    const pet = userData.pets;
+                    // Map DB pet to GameState
+                    const loadedState: GameState = {
+                        petName: pet.name,
+                        petType: pet.type,
+                        stage: pet.stage,
+                        stats: {
+                            hunger: pet.hunger,
+                            happiness: pet.happiness,
+                            energy: pet.energy,
+                        },
+                        coins: pet.coins ?? 100, // Default to 100 if null (legacy)
+                        birthTime: Number(pet.birth_time),
+                        lastUpdate: Number(pet.last_update),
+                        deathTimer: pet.death_timer ? Number(pet.death_timer) : null,
+                        happyTimeAccumulated: Number(pet.happy_time_accumulated),
+                    };
+                    setGameState(loadedState);
+                } else if (!userData) {
+                    // Create user row if missing
+                    await db.createOrUpdateUser(user.id);
+                }
+            } catch (error) {
+                console.error('Failed to load game state:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadGame();
+    }, [user?.id]);
+
+    // Save state to Supabase whenever it changes (debounced)
     useEffect(() => {
-        if (gameState) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+        if (!gameState || !user?.id) return;
+
+        // Clear previous timeout
+        if (saveTimeoutRef.current) {
+            clearTimeout(saveTimeoutRef.current);
         }
-    }, [gameState]);
+
+        // Set new timeout (debounce 2s to catch rapid clicks, but logic updates every 10s anyway)
+        saveTimeoutRef.current = setTimeout(async () => {
+            try {
+                await db.savePetState(user.id, gameState);
+            } catch (error) {
+                console.error('Failed to auto-save game state:', error);
+            }
+        }, 1000);
+
+        return () => {
+            if (saveTimeoutRef.current) {
+                clearTimeout(saveTimeoutRef.current);
+            }
+        };
+    }, [gameState, user?.id]);
 
     // Initialize new game
-    const startGame = useCallback((petName: string, petType: PetType) => {
+    const startGame = useCallback(async (petName: string, petType: PetType) => {
+        if (!user?.id) return;
+
         const newState: GameState = {
             petName,
             petType,
@@ -52,29 +110,58 @@ export function useGameState() {
             lastUpdate: Date.now(),
             happyTimeAccumulated: 0,
         };
+
         setGameState(newState);
-    }, []);
 
-    // Reset game (clear localStorage and state)
-    const resetGame = useCallback(() => {
-        localStorage.removeItem(STORAGE_KEY);
-        setGameState(null);
-    }, []);
+        // Save immediately
+        try {
+            await db.createOrUpdateUser(user.id); // Ensure user exists
+            await db.savePetState(user.id, newState);
+        } catch (error) {
+            console.error('Failed to save new game:', error);
+        }
+    }, [user?.id]);
 
-    // Increase a specific stat by amount (max 100)
-    const increaseStat = useCallback((stat: 'hunger' | 'happiness' | 'energy', amount: number) => {
+    // Reset game (clear Supabase and state)
+    const resetGame = useCallback(async () => {
+        if (!user?.id) return;
+
+        try {
+            await db.deletePet(user.id);
+            setGameState(null);
+        } catch (error) {
+            console.error('Failed to reset game:', error);
+        }
+    }, [user?.id]);
+
+    // Perform game actions (eat, play, train)
+    const performAction = useCallback((action: 'eat' | 'play' | 'train') => {
         setGameState((prev) => {
             if (!prev) return prev;
 
+            let newStats = { ...prev.stats };
+            let newCoins = prev.coins;
+
+            if (action === 'eat') {
+                if (newCoins < 10) return prev; // Cannot eat if insufficient coins
+                newCoins -= 10;
+                newStats.hunger = Math.min(100, newStats.hunger + 20);
+            } else if (action === 'play') {
+                newCoins += 5;
+                newStats.happiness = Math.min(100, newStats.happiness + 20);
+            } else if (action === 'train') {
+                newCoins += 6;
+                newStats.energy = Math.min(100, newStats.energy + 20);
+                newStats.hunger = Math.max(0, newStats.hunger - 1); // "resta un punto de hunger"
+            }
+
             return {
                 ...prev,
-                stats: {
-                    ...prev.stats,
-                    [stat]: Math.min(100, prev.stats[stat] + amount),
-                },
+                stats: newStats,
+                coins: newCoins,
                 lastUpdate: Date.now(),
-                // Reset death timer if stat goes above 0
-                deathTimer: prev.stats[stat] + amount > 0 ? null : prev.deathTimer,
+                // Reset death timer if relevant stat goes above 0 (simplified logic, decay handles this mostly)
+                deathTimer: (newStats.hunger > 0 && newStats.happiness > 0 && newStats.energy > 0) ? null : prev.deathTimer,
             };
         });
     }, []);
@@ -151,6 +238,8 @@ export function useGameState() {
         gameState,
         startGame,
         resetGame,
-        increaseStat,
+        performAction,
+        isLoading,
     };
 }
+

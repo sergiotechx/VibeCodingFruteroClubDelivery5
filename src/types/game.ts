@@ -15,6 +15,7 @@ export interface GameState {
     lastUpdate: number; // timestamp of last stat update
     deathTimer: number | null; // timestamp when a stat first reached 0
     happyTimeAccumulated: number; // total milliseconds spent happy since birth
+    coins: number;
 }
 
 export interface CharacterOption {

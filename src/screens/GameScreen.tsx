@@ -9,11 +9,11 @@ import './GameScreen.css';
 
 interface GameScreenProps {
     gameState: GameState;
-    onIncreaseStat: (stat: 'hunger' | 'happiness' | 'energy') => void;
+    onAction: (action: 'eat' | 'play' | 'train') => void;
     onReset: () => void;
 }
 
-export function GameScreen({ gameState, onIncreaseStat, onReset }: GameScreenProps) {
+export function GameScreen({ gameState, onAction, onReset }: GameScreenProps) {
     const { isMuted, toggleMute } = useAudioPlayer('/assets/music.mp3');
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
@@ -39,7 +39,12 @@ export function GameScreen({ gameState, onIncreaseStat, onReset }: GameScreenPro
                 <div className="game-container">
                     {/* Header */}
                     <header className="game-header">
-                        <h1 className="pet-name">{gameState.petName}</h1>
+                        <div className="header-info">
+                            <h1 className="pet-name">{gameState.petName}</h1>
+                            <div className="coin-counter">
+                                💰 {gameState.coins}
+                            </div>
+                        </div>
                         <div className="header-controls">
                             <button
                                 className="nes-btn is-small control-btn"
@@ -124,24 +129,34 @@ export function GameScreen({ gameState, onIncreaseStat, onReset }: GameScreenPro
                     <div className="actions-section">
                         <button
                             className="nes-btn is-error action-btn"
-                            onClick={() => onIncreaseStat('hunger')}
-                            disabled={gameState.stage === 'dead'}
+                            onClick={() => onAction('eat')}
+                            disabled={gameState.stage === 'dead' || gameState.stats.hunger >= 100 || gameState.coins < 10}
+                            title={gameState.coins < 10 ? 'Not enough coins (10)' : 'Cost: 10 coins'}
                         >
-                            🍖 Comer
+                            <div className="btn-content">
+                                <span>🍖 Comer</span>
+                                <span className="btn-cost">-10💰</span>
+                            </div>
                         </button>
                         <button
                             className="nes-btn is-warning action-btn"
-                            onClick={() => onIncreaseStat('happiness')}
-                            disabled={gameState.stage === 'dead'}
+                            onClick={() => onAction('play')}
+                            disabled={gameState.stage === 'dead' || gameState.stats.happiness >= 100}
                         >
-                            👋 Jugar
+                            <div className="btn-content">
+                                <span>👋 Jugar</span>
+                                <span className="btn-gain">+5💰</span>
+                            </div>
                         </button>
                         <button
                             className="nes-btn is-success action-btn"
-                            onClick={() => onIncreaseStat('energy')}
-                            disabled={gameState.stage === 'dead'}
+                            onClick={() => onAction('train')}
+                            disabled={gameState.stage === 'dead' || gameState.stats.energy >= 100}
                         >
-                            🏋️ Entrenar
+                            <div className="btn-content">
+                                <span>🏋️ Entrenar</span>
+                                <span className="btn-gain">+6💰</span>
+                            </div>
                         </button>
                     </div>
 

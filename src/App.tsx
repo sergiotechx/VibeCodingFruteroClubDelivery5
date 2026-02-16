@@ -12,12 +12,12 @@ type Screen = 'intro' | 'auth' | 'start' | 'game';
 
 function App() {
     const [currentScreen, setCurrentScreen] = useState<Screen>('intro');
-    const { gameState, startGame, resetGame, increaseStat } = useGameState();
+    const { gameState, startGame, resetGame, performAction, isLoading } = useGameState();
     const { ready, authenticated } = usePrivy();
 
     // Effect to handle navigation based on auth and game state
     useEffect(() => {
-        if (!ready) return;
+        if (!ready || isLoading) return;
 
         if (authenticated) {
             if (gameState) {
@@ -33,7 +33,7 @@ function App() {
                 setCurrentScreen('auth');
             }
         }
-    }, [ready, authenticated, gameState, currentScreen]);
+    }, [ready, authenticated, gameState, currentScreen, isLoading]);
 
     const handleIntroComplete = () => {
         if (authenticated) {
@@ -48,14 +48,31 @@ function App() {
         setCurrentScreen('game');
     };
 
-    const handleReset = () => {
-        resetGame();
+    const handleReset = async () => {
+        await resetGame();
         setCurrentScreen('start');
     };
 
-    const handleIncreaseStat = (stat: 'hunger' | 'happiness' | 'energy') => {
-        increaseStat(stat, 20);
+    const handleAction = (action: 'eat' | 'play' | 'train') => {
+        performAction(action);
     };
+
+    if (!ready || (authenticated && isLoading)) {
+        return (
+            <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+                backgroundColor: '#212529',
+                color: '#fff',
+                fontFamily: '"Press Start 2P"',
+                fontSize: '24px'
+            }}>
+                LOADING CARTRIDGE...
+            </div>
+        );
+    }
 
     return (
         <>
@@ -76,7 +93,7 @@ function App() {
             {currentScreen === 'game' && gameState && (
                 <GameScreen
                     gameState={gameState}
-                    onIncreaseStat={handleIncreaseStat}
+                    onAction={handleAction}
                     onReset={handleReset}
                 />
             )}

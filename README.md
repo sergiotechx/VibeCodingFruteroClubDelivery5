@@ -17,6 +17,8 @@ Este proyecto ha sido construido utilizando tecnologías modernas de desarrollo 
 - **[React 19](https://react.dev/):** Biblioteca principal para la interfaz de usuario.
 - **[TypeScript](https://www.typescriptlang.org/):** Para un código robusto y tipado estático.
 - **[Vite](https://vitejs.dev/):** Entorno de desarrollo ultrarrápido.
+- **[Supabase](https://supabase.com/):** Backend-as-a-Service para base de datos y persistencia en la nube.
+- **[Privy](https://www.privy.io/):** Solución de autenticación y gestión de usuarios Web3/Web2.
 - **[NES.css](https://nostalgic-css.github.io/NES.css/):** Framework CSS para conseguir el estilo NES (8-bit) sin esfuerzo.
 - **CSS3:** Animaciones personalizadas y estilos responsivos.
 
@@ -35,9 +37,12 @@ Sigue estos pasos para ejecutar el juego en tu máquina local:
     npm install
     ```
 3.  **Configurar Variables de Entorno:**
-    Crea un archivo `.env` en la raíz del proyecto y agrega tu API Key de OpenAI:
+    Crea un archivo `.env` en la raíz del proyecto y agrega tus claves:
     ```env
-    VITE_OPENAI_KEY=tu_api_key_aqui
+    VITE_OPENAI_KEY=tu_api_key_openai
+    VITE_SUPABASE_URL=tu_supabase_url
+    VITE_SUPABASE_ANON_KEY=tu_supabase_anon_key
+    VITE_PRIVY_APP_ID=tu_privy_app_id
     ```
 4.  **Iniciar el servidor de desarrollo:**
     ```bash
@@ -47,11 +52,13 @@ Sigue estos pasos para ejecutar el juego en tu máquina local:
     Visita la URL que aparece en la terminal (usualmente `http://localhost:5173`).
 
 ## ✨ Características Destacadas
+- **Sistema de Economía (¡Nuevo!):** Gana monedas jugando y entrenando para alimentar a tu mascota. Gestión de recursos para sobrevivir.
+- **Persistencia en la Nube (¡Nuevo!):** Tu progreso se guarda automáticamente en Supabase. Juega desde cualquier lugar sin perder tus datos.
+- **Autenticación (¡Nuevo!):** Login seguro a través de Privy.
 - **Sistema de Emociones:** Tu mascota reacciona visualmente según su estado de ánimo.
 - **Contador de Evolución:** Un timer visual que te indica cuánto falta para la siguiente etapa (¡solo avanza si tu mascota está feliz!).
-- **Persistencia de Datos:** El juego guarda tu progreso automáticamente en el navegador.
 - **Modo Oscuro/Retro:** Diseño visualmente atractivo y nostálgico.
 - **Chat con IA:** ¡Habla con tu mascota! Integración con **OpenAI** para tener conversaciones únicas basadas en la personalidad y estado de tu ELEMON.
 
 ---
-*Desarrollado como parte del Delivery 2 para VibeCode Bootcamp.*
+*Desarrollado como parte del Delivery 3 para VibeCode Bootcamp.*

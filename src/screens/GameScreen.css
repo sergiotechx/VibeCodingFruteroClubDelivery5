@@ -33,16 +33,30 @@
     border-bottom: 2px solid var(--border-color);
 }
 
+.header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
 .pet-name {
     font-size: 1.8rem;
     margin: 0;
     color: var(--neon-primary);
     text-shadow: 0 0 15px var(--neon-primary);
+    line-height: 1.2;
+}
+
+.coin-counter {
+    font-size: 1rem;
+    color: #ffd700;
+    text-shadow: 2px 2px 0 #000;
 }
 
 .header-controls {
     display: flex;
     gap: 0.5rem;
+    align-items: flex-start;
 }
 
 .control-btn {
@@ -142,8 +156,25 @@
 
 .action-btn {
     font-size: 0.9rem;
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem 0.5rem;
     white-space: nowrap;
+    height: auto;
+    min-height: 3.5rem;
+}
+
+.btn-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    line-height: 1.2;
+}
+
+.btn-cost,
+.btn-gain {
+    font-size: 0.7rem;
+    opacity: 0.9;
 }
 
 .action-btn:disabled {

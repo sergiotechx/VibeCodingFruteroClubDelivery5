@@ -1,23 +1,49 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-
-const STORAGE_KEY = 'elemon_music_muted';
+import { usePrivy } from '@privy-io/react-auth';
+import { db } from '../services/supabase';
 
 export function useAudioPlayer(audioUrl: string) {
-    const [isMuted, setIsMuted] = useState(true); // Default OFF
+    const { user } = usePrivy();
+    const [isMuted, setIsMuted] = useState(false); // Default unmuted, will load from DB
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    // Load mute preference from localStorage
+    // Load mute preference from Supabase
     useEffect(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved !== null) {
-            setIsMuted(saved === 'true');
-        }
-    }, []);
+        if (!user?.id) return;
 
-    // Save mute preference to localStorage
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, String(isMuted));
-    }, [isMuted]);
+        const loadSettings = async () => {
+            try {
+                const userData = await db.getUser(user.id);
+                if (userData) {
+                    setIsMuted(userData.is_muted);
+                } else {
+                    // Create user if not exists (default settings)
+                    await db.createOrUpdateUser(user.id);
+                }
+            } catch (error) {
+                console.error('Failed to load audio settings:', error);
+            }
+        };
+
+        loadSettings();
+    }, [user?.id]);
+
+    // Save mute preference to Supabase
+    const toggleMute = useCallback(async () => {
+        const newMutedState = !isMuted;
+        setIsMuted(newMutedState);
+
+        if (user?.id) {
+            try {
+                // Ensure user exists before updating
+                await db.createOrUpdateUser(user.id);
+                await db.updateSettings(user.id, newMutedState);
+            } catch (error) {
+                console.error('Failed to save audio settings:', error);
+                // Revert on failure? Maybe unnecessary for UI feeling
+            }
+        }
+    }, [isMuted, user?.id]);
 
     // Initialize audio element
     useEffect(() => {
@@ -25,11 +51,18 @@ export function useAudioPlayer(audioUrl: string) {
         audio.loop = true;
         audioRef.current = audio;
 
+        // Try to play immediately if not muted
+        if (!isMuted) {
+            audio.play().catch(() => {
+                // Autoplay policy might block this, expected
+            });
+        }
+
         return () => {
             audio.pause();
             audio.src = '';
         };
-    }, [audioUrl]);
+    }, [audioUrl]); // Remove isMuted from dependency to avoid recreating audio on mute toggle
 
     // Control playback based on mute state
     useEffect(() => {
@@ -43,10 +76,6 @@ export function useAudioPlayer(audioUrl: string) {
             });
         }
     }, [isMuted]);
-
-    const toggleMute = useCallback(() => {
-        setIsMuted((prev) => !prev);
-    }, []);
 
     return {
         isMuted,

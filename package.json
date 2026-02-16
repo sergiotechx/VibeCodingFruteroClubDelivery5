@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@privy-io/react-auth": "^3.13.1",
+    "@supabase/supabase-js": "^2.95.3",
     "nes.css": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
