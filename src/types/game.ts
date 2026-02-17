@@ -1,6 +1,13 @@
 export type PetType = 'fire' | 'water' | 'earth' | 'air';
 export type PetStage = 'egg' | 'baby' | 'adult' | 'dead';
 export type Emotion = 'happy' | 'sad';
+export type EvaluationCategory = 'letras' | 'poemas' | 'diseño';
+
+export interface EvaluationResult {
+    score: number;
+    feedback: string;
+}
+
 
 export interface GameState {
     petName: string;
@@ -16,6 +23,7 @@ export interface GameState {
     deathTimer: number | null; // timestamp when a stat first reached 0
     happyTimeAccumulated: number; // total milliseconds spent happy since birth
     coins: number;
+    evaluationCoins: number; // internal counter for auto-evolution trigger
 }
 
 export interface CharacterOption {

@@ -26,6 +26,7 @@ export interface Pet {
     last_update: number;
     death_timer: number | null;
     happy_time_accumulated: number;
+    evaluation_coins: number;
 }
 
 export const db = {
@@ -76,6 +77,7 @@ export const db = {
             last_update: gameState.lastUpdate,
             death_timer: gameState.deathTimer,
             happy_time_accumulated: gameState.happyTimeAccumulated,
+            evaluation_coins: gameState.evaluationCoins,
         };
 
         const { error } = await supabase

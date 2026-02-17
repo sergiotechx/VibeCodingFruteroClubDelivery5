@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import type { GameState } from '../types/game';
+import type { GameState, EvaluationResult } from '../types/game';
 import { useAudioPlayer } from '../hooks/useAudioPlayer';
 import { getSpriteUrl, getEmotion } from '../utils/spriteResolver';
 import { ResetModal } from '../components/ResetModal';
 import { EvolutionCountdown } from '../components/EvolutionCountdown';
 import { ChatArea } from '../components/ChatArea';
+import { OpinionDrawer } from '../components/OpinionDrawer';
 import './GameScreen.css';
 
 interface GameScreenProps {
     gameState: GameState;
     onAction: (action: 'eat' | 'play' | 'train') => void;
+    onEvaluation: (result: EvaluationResult) => void;
     onReset: () => void;
 }
 
-export function GameScreen({ gameState, onAction, onReset }: GameScreenProps) {
+export function GameScreen({ gameState, onAction, onEvaluation, onReset }: GameScreenProps) {
     const { isMuted, toggleMute } = useAudioPlayer('/assets/music.mp3');
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+    const [isOpinionOpen, setIsOpinionOpen] = useState(false);
 
     const emotion = getEmotion(gameState.stats);
     const spriteUrl = getSpriteUrl(gameState.petType, gameState.stage, emotion);
@@ -31,6 +34,11 @@ export function GameScreen({ gameState, onAction, onReset }: GameScreenProps) {
 
     const handleResetCancel = () => {
         setIsResetModalOpen(false);
+    };
+
+    const handleEvaluationComplete = (result: EvaluationResult) => {
+        onEvaluation(result);
+        setIsOpinionOpen(false);
     };
 
     return (
@@ -158,6 +166,15 @@ export function GameScreen({ gameState, onAction, onReset }: GameScreenProps) {
                                 <span className="btn-gain">+6💰</span>
                             </div>
                         </button>
+                        <button
+                            className="nes-btn is-primary action-btn opinion-btn"
+                            onClick={() => setIsOpinionOpen(true)}
+                            disabled={gameState.stage === 'dead'}
+                        >
+                            <div className="btn-content">
+                                <span>Opinión 🤔</span>
+                            </div>
+                        </button>
                     </div>
 
                     {/* Death Message */}
@@ -184,6 +201,12 @@ export function GameScreen({ gameState, onAction, onReset }: GameScreenProps) {
                 petName={gameState.petName}
                 onConfirm={handleResetConfirm}
                 onCancel={handleResetCancel}
+            />
+            <OpinionDrawer
+                isOpen={isOpinionOpen}
+                onClose={() => setIsOpinionOpen(false)}
+                petName={gameState.petName}
+                onEvaluationComplete={handleEvaluationComplete}
             />
         </div>
     );

@@ -12,7 +12,7 @@ type Screen = 'intro' | 'auth' | 'start' | 'game';
 
 function App() {
     const [currentScreen, setCurrentScreen] = useState<Screen>('intro');
-    const { gameState, startGame, resetGame, performAction, isLoading } = useGameState();
+    const { gameState, startGame, resetGame, performAction, handleEvaluation, isLoading } = useGameState();
     const { ready, authenticated } = usePrivy();
 
     // Effect to handle navigation based on auth and game state
@@ -94,6 +94,7 @@ function App() {
                 <GameScreen
                     gameState={gameState}
                     onAction={handleAction}
+                    onEvaluation={handleEvaluation}
                     onReset={handleReset}
                 />
             )}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
-import type { GameState, PetType, PetStage } from '../types/game';
+import type { GameState, PetType, PetStage, EvaluationResult } from '../types/game';
 import { getStage } from '../utils/spriteResolver';
 import { db } from '../services/supabase';
 
@@ -20,6 +20,7 @@ const INITIAL_STATE: Omit<GameState, 'petName' | 'petType'> = {
     lastUpdate: Date.now(),
     deathTimer: null,
     happyTimeAccumulated: 0,
+    evaluationCoins: 0,
 };
 
 export function useGameState() {
@@ -57,6 +58,7 @@ export function useGameState() {
                         lastUpdate: Number(pet.last_update),
                         deathTimer: pet.death_timer ? Number(pet.death_timer) : null,
                         happyTimeAccumulated: Number(pet.happy_time_accumulated),
+                        evaluationCoins: pet.evaluation_coins ?? 0,
                     };
                     setGameState(loadedState);
                 } else if (!userData) {
@@ -234,11 +236,56 @@ export function useGameState() {
         return () => clearInterval(interval);
     }, [gameState]);
 
+    // Handle evaluation results
+    const handleEvaluation = useCallback((result: EvaluationResult) => {
+        setGameState((prev) => {
+            if (!prev) return prev;
+
+            // Calculate coin change based on score
+            let coinChange = 0;
+            if (result.score < 50) coinChange = -3;
+            else if (result.score >= 60) coinChange = 10;
+            // score 50-59 = 0 coins (no change)
+
+            // IMPORTANT: Coins are added/subtracted from the main coins field
+            const newCoins = Math.max(0, prev.coins + coinChange);
+
+            // evaluation_coins counter only tracks GAINS (not losses)
+            const newEvalCoins = prev.evaluationCoins + Math.max(0, coinChange);
+
+            // Auto-evolution if 50 evaluation coins accumulated
+            let newStage = prev.stage;
+            let finalEvalCoins = newEvalCoins;
+            let finalCoins = newCoins;
+
+            if (newEvalCoins >= 50 && prev.stage !== 'adult' && prev.stage !== 'dead') {
+                // Force evolution
+                if (prev.stage === 'egg') newStage = 'baby';
+                else if (prev.stage === 'baby') newStage = 'adult';
+
+                // Deduct 50 coins from main balance as "training cost"
+                finalCoins = Math.max(0, newCoins - 50);
+
+                // Reset evaluation counter
+                finalEvalCoins = 0;
+            }
+
+            return {
+                ...prev,
+                coins: finalCoins,              // Visible field in UI
+                evaluationCoins: finalEvalCoins, // Internal counter
+                stage: newStage,
+                lastUpdate: Date.now()
+            };
+        });
+    }, []);
+
     return {
         gameState,
         startGame,
         resetGame,
         performAction,
+        handleEvaluation,
         isLoading,
     };
 }
