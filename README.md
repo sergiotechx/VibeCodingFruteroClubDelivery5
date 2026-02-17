@@ -21,6 +21,8 @@ Este proyecto ha sido construido utilizando tecnologías modernas de desarrollo 
 - **[Privy](https://www.privy.io/):** Solución de autenticación y gestión de usuarios Web3/Web2.
 - **[NES.css](https://nostalgic-css.github.io/NES.css/):** Framework CSS para conseguir el estilo NES (8-bit) sin esfuerzo.
 - **CSS3:** Animaciones personalizadas y estilos responsivos.
+- **Supabase Edge Functions (Local):** Lógica serverless implementada localmente para la evaluación de imágenes con IA.
+- **[OpenAI GPT-4o](https://openai.com/):** Modelo de visión para analizar y calificar las comidas de tu mascota.
 
 ## 🛠️ Herramientas y Plataformas
 El desarrollo de este proyecto fue posible gracias a:
@@ -58,7 +60,9 @@ Sigue estos pasos para ejecutar el juego en tu máquina local:
 - **Sistema de Emociones:** Tu mascota reacciona visualmente según su estado de ánimo.
 - **Contador de Evolución:** Un timer visual que te indica cuánto falta para la siguiente etapa (¡solo avanza si tu mascota está feliz!).
 - **Modo Oscuro/Retro:** Diseño visualmente atractivo y nostálgico.
+- **Evaluación de Estudio con IA (¡Nuevo!):** Tu ELEMON evalúa una canción, poema o diseño UI y te da una opinión. Además, ganas puntos de estudio y tu ELEMON puede evolucionar.
+- **Perfil de Usuario (¡Nuevo!):** Visualización de avatar de Google y experiencia personalizada en el header.
 - **Chat con IA:** ¡Habla con tu mascota! Integración con **OpenAI** para tener conversaciones únicas basadas en la personalidad y estado de tu ELEMON.
 
 ---
-*Desarrollado como parte del Delivery 3 para VibeCode Bootcamp.*
+*Desarrollado como parte del Delivery 4 para VibeCode Bootcamp.*
