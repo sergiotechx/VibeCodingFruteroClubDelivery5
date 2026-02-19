@@ -13,9 +13,10 @@ interface GameScreenProps {
     onAction: (action: 'eat' | 'play' | 'train') => void;
     onEvaluation: (result: EvaluationResult) => void;
     onReset: () => void;
+    onTogglePublic: () => void;
 }
 
-export function GameScreen({ gameState, onAction, onEvaluation, onReset }: GameScreenProps) {
+export function GameScreen({ gameState, onAction, onEvaluation, onReset, onTogglePublic }: GameScreenProps) {
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
     const [isOpinionOpen, setIsOpinionOpen] = useState(false);
 
@@ -45,6 +46,23 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset }: GameS
 
     return (
         <div className="game-screen">
+            {/* Public Profile Toggle Button */}
+            <button
+                className={`nes-btn is-small ${gameState.public ? 'is-success' : 'is-primary'}`}
+                onClick={onTogglePublic}
+                style={{
+                    position: 'absolute',
+                    top: '70px', // Below the logout button (top: 20px + height ~40px + gap)
+                    right: '20px',
+                    zIndex: 1000,
+                    fontSize: '0.6rem',
+                    padding: '0.2rem 0.5rem',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                {gameState.public ? 'Public Profile ON' : 'Public Profile OFF'}
+            </button>
+
             <div className="content-wrapper">
                 <div className="game-container">
                     {/* Header */}

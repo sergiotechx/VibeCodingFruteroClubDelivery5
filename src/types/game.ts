@@ -24,6 +24,7 @@ export interface GameState {
     happyTimeAccumulated: number; // total milliseconds spent happy since birth
     coins: number;
     evaluationCoins: number; // internal counter for auto-evolution trigger
+    public: boolean; // public profile visibility
 }
 
 export interface CharacterOption {

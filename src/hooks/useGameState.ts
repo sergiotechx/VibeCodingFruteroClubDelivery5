@@ -21,6 +21,7 @@ const INITIAL_STATE: Omit<GameState, 'petName' | 'petType'> = {
     deathTimer: null,
     happyTimeAccumulated: 0,
     evaluationCoins: 0,
+    public: false,
 };
 
 export function useGameState() {
@@ -59,6 +60,7 @@ export function useGameState() {
                         deathTimer: pet.death_timer ? Number(pet.death_timer) : null,
                         happyTimeAccumulated: Number(pet.happy_time_accumulated),
                         evaluationCoins: pet.evaluation_coins ?? 0,
+                        public: pet.public ?? false,
                     };
                     setGameState(loadedState);
                 } else if (!userData) {
@@ -134,6 +136,23 @@ export function useGameState() {
         } catch (error) {
             console.error('Failed to reset game:', error);
         }
+    }, [user?.id]);
+
+    // Toggle public profile status
+    const togglePublic = useCallback(async () => {
+        if (!user?.id) return;
+
+        setGameState((prev) => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                public: !prev.public
+            };
+        });
+
+        // We can rely on the debounced save, or save immediately to be sure
+        // Let's rely on the debounced save for consistency with other state, 
+        // but if we needed immediate feedback we could call db.updatePetPublicStatus here.
     }, [user?.id]);
 
     // Perform game actions (eat, play, train)
@@ -284,6 +303,7 @@ export function useGameState() {
         gameState,
         startGame,
         resetGame,
+        togglePublic,
         performAction,
         handleEvaluation,
         isLoading,

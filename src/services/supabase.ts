@@ -27,6 +27,7 @@ export interface Pet {
     death_timer: number | null;
     happy_time_accumulated: number;
     evaluation_coins: number;
+    public: boolean;
 }
 
 export const db = {
@@ -78,11 +79,21 @@ export const db = {
             death_timer: gameState.deathTimer,
             happy_time_accumulated: gameState.happyTimeAccumulated,
             evaluation_coins: gameState.evaluationCoins,
+            public: gameState.public,
         };
 
         const { error } = await supabase
             .from('pets')
             .upsert(petData, { onConflict: 'user_id' });
+
+        if (error) throw error;
+    },
+
+    async updatePetPublicStatus(userId: string, isPublic: boolean) {
+        const { error } = await supabase
+            .from('pets')
+            .update({ public: isPublic })
+            .eq('user_id', userId);
 
         if (error) throw error;
     },
