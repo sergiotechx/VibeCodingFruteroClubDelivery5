@@ -1,4 +1,4 @@
-/* ========== Evolution Countdown — AAA ========== */
+/* ========== Evolution Countdown — SNES Twilight ========== */
 .evolution-countdown {
     margin: 1rem 0;
     animation: slideDown 0.3s ease-out;
@@ -18,7 +18,7 @@
 
 /* ========== Container — Gradient Border ========== */
 .countdown-container {
-    background: linear-gradient(135deg, rgba(15, 15, 30, 0.95) 0%, rgba(10, 20, 40, 0.95) 100%) !important;
+    background: linear-gradient(135deg, rgba(18, 16, 30, 0.95) 0%, rgba(13, 18, 35, 0.95) 100%) !important;
     border: 2px solid transparent !important;
     background-clip: padding-box !important;
     padding: 1rem !important;
@@ -26,17 +26,17 @@
     overflow: hidden;
     border-radius: 12px;
     box-shadow:
-        0 0 20px rgba(0, 229, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 0 16px rgba(240, 192, 64, 0.06),
+        inset 0 1px 0 rgba(232, 228, 220, 0.04);
 }
 
-/* Animated border glow */
+/* Animated border — amber to sage */
 .countdown-container::after {
     content: '';
     position: absolute;
     inset: -2px;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--neon-water), var(--neon-earth), var(--neon-water));
+    background: linear-gradient(135deg, var(--color-primary), var(--color-success), var(--color-primary));
     background-size: 200% 200%;
     animation: borderRotate 4s linear infinite;
     z-index: -1;
@@ -64,7 +64,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    background: linear-gradient(90deg, transparent, rgba(232, 228, 220, 0.04), transparent);
     animation: shimmer 4s infinite;
     z-index: 1;
 }
@@ -90,20 +90,20 @@
 }
 
 .countdown-label {
-    color: var(--neon-water);
+    color: var(--color-info);
     font-weight: bold;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    text-shadow: 0 0 10px var(--glow-water);
+    text-shadow: 0 0 8px var(--glow-info);
 }
 
 .paused-indicator {
-    color: var(--neon-fire);
+    color: var(--color-action);
     font-size: 0.75rem;
     font-weight: bold;
     animation: blink 1.5s ease-in-out infinite;
-    text-shadow: 0 0 8px var(--glow-fire);
+    text-shadow: 0 0 6px var(--glow-action);
 }
 
 @keyframes blink {
@@ -135,23 +135,23 @@
 }
 
 .current-stage {
-    color: #ffd700;
+    color: var(--color-primary);
     font-weight: bold;
     font-size: 0.9rem;
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    text-shadow: 0 0 6px var(--glow-primary);
 }
 
 .arrow {
-    color: var(--neon-water);
+    color: var(--color-info);
     font-size: 1.2rem;
-    text-shadow: 0 0 8px var(--glow-water);
+    text-shadow: 0 0 6px var(--glow-info);
 }
 
 .next-stage {
-    color: var(--neon-earth);
+    color: var(--color-success);
     font-weight: bold;
     font-size: 0.9rem;
-    text-shadow: 0 0 8px var(--glow-earth);
+    text-shadow: 0 0 6px var(--glow-success);
 }
 
 /* ========== Timer Display ========== */
@@ -159,15 +159,15 @@
     background: rgba(0, 0, 0, 0.4);
     padding: 0.25rem 0.75rem;
     border-radius: 6px;
-    border: 1px solid rgba(0, 229, 255, 0.2);
+    border: 1px solid rgba(96, 160, 208, 0.15);
 }
 
 .time-value {
-    color: var(--neon-water);
+    color: var(--color-info);
     font-size: 1.5rem;
     font-weight: bold;
     font-family: 'Courier New', monospace;
-    text-shadow: 0 0 15px var(--glow-water);
+    text-shadow: 0 0 12px var(--glow-info);
 }
 
 /* ========== Progress Bar ========== */
@@ -175,7 +175,7 @@
     width: 100%;
     height: 12px;
     background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(0, 229, 255, 0.15);
+    border: 1px solid rgba(96, 160, 208, 0.1);
     border-radius: 6px;
     overflow: hidden;
     position: relative;
@@ -184,9 +184,9 @@
 
 .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--neon-earth) 0%, var(--neon-water) 100%);
+    background: linear-gradient(90deg, var(--color-success) 0%, var(--color-info) 100%);
     transition: width 0.3s ease-out;
-    box-shadow: 0 0 12px var(--glow-earth);
+    box-shadow: 0 0 8px var(--glow-success);
     position: relative;
     border-radius: 6px;
 }
@@ -198,7 +198,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
     animation: progressShimmer 2s infinite;
 }
 
@@ -214,25 +214,25 @@
 
 /* ========== Paused State ========== */
 .evolution-countdown.paused .countdown-container {
-    border-color: rgba(255, 69, 0, 0.3) !important;
+    border-color: rgba(224, 80, 64, 0.2) !important;
 }
 
 .evolution-countdown.paused .countdown-container::after {
-    background: linear-gradient(135deg, rgba(255, 69, 0, 0.3), rgba(100, 100, 100, 0.3), rgba(255, 69, 0, 0.3));
+    background: linear-gradient(135deg, rgba(224, 80, 64, 0.2), rgba(80, 80, 80, 0.2), rgba(224, 80, 64, 0.2));
 }
 
 .evolution-countdown.paused .progress-bar-fill {
-    background: linear-gradient(90deg, #444 0%, #666 100%);
+    background: linear-gradient(90deg, #3a3a3a 0%, #555 100%);
     box-shadow: none;
 }
 
 .evolution-countdown.paused .time-value {
-    color: #888;
+    color: #666;
     text-shadow: none;
 }
 
 .evolution-countdown.paused .countdown-label {
-    color: #888;
+    color: #666;
     text-shadow: none;
 }
 

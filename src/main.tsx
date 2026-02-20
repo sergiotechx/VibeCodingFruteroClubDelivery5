@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { PrivyProvider } from '@privy-io/react-auth'
-import 'nes.css/css/nes.min.css'
+import './retro.css'
 import './index.css'
 import App from './App.tsx'
 

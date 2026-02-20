@@ -1,0 +1,400 @@
+/* ============================================================
+   retro.css — Custom 16-bit Retro UI System (SNES Twilight)
+   Replaces NES.css with full palette control.
+   Class names are identical so zero TSX changes needed.
+   ============================================================ */
+
+/* ========== BUTTONS — nes-btn ========== */
+.nes-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    border: none;
+    color: var(--text-primary);
+    background-color: #404058;
+    position: relative;
+    user-select: none;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+
+    /* Pixel border via box-shadow */
+    box-shadow:
+        inset -4px -4px #2a2a38,
+        inset 4px 4px #5a5a70,
+        0 0 0 2px #1a1a24;
+}
+
+.nes-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+    box-shadow:
+        inset -4px -4px #2a2a38,
+        inset 4px 4px #5a5a70,
+        0 0 0 2px #1a1a24,
+        0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.nes-btn:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow:
+        inset 4px 4px #2a2a38,
+        inset -4px -4px #5a5a70,
+        0 0 0 2px #1a1a24;
+}
+
+.nes-btn:disabled,
+.nes-btn.is-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    filter: grayscale(0.6);
+    pointer-events: none;
+}
+
+/* Primary — Amber */
+.nes-btn.is-primary {
+    background-color: var(--color-primary);
+    color: #0d0f1a;
+    box-shadow:
+        inset -4px -4px #b08820,
+        inset 4px 4px #ffe070,
+        0 0 0 2px #604810,
+        0 0 10px var(--glow-primary);
+}
+
+.nes-btn.is-primary:hover:not(:disabled) {
+    box-shadow:
+        inset -4px -4px #b08820,
+        inset 4px 4px #ffe070,
+        0 0 0 2px #604810,
+        0 0 20px var(--glow-primary),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Error — Soft Coral */
+.nes-btn.is-error {
+    background-color: var(--color-action);
+    color: #fff;
+    box-shadow:
+        inset -4px -4px #a03028,
+        inset 4px 4px #f07868,
+        0 0 0 2px #602018,
+        0 0 8px var(--glow-action);
+}
+
+.nes-btn.is-error:hover:not(:disabled) {
+    box-shadow:
+        inset -4px -4px #a03028,
+        inset 4px 4px #f07868,
+        0 0 0 2px #602018,
+        0 0 18px var(--glow-action),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Warning — Amber (same as primary for cohesion) */
+.nes-btn.is-warning {
+    background-color: var(--color-primary);
+    color: #0d0f1a;
+    box-shadow:
+        inset -4px -4px #b08820,
+        inset 4px 4px #ffe070,
+        0 0 0 2px #604810,
+        0 0 8px var(--glow-primary);
+}
+
+.nes-btn.is-warning:hover:not(:disabled) {
+    box-shadow:
+        inset -4px -4px #b08820,
+        inset 4px 4px #ffe070,
+        0 0 0 2px #604810,
+        0 0 18px var(--glow-primary),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Success — Sage Green */
+.nes-btn.is-success {
+    background-color: var(--color-success);
+    color: #0d0f1a;
+    box-shadow:
+        inset -4px -4px #308858,
+        inset 4px 4px #70d8a0,
+        0 0 0 2px #184830,
+        0 0 8px var(--glow-success);
+}
+
+.nes-btn.is-success:hover:not(:disabled) {
+    box-shadow:
+        inset -4px -4px #308858,
+        inset 4px 4px #70d8a0,
+        0 0 0 2px #184830,
+        0 0 18px var(--glow-success),
+        0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Small variant */
+.nes-btn.is-small {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+}
+
+
+/* ========== PROGRESS BARS — nes-progress ========== */
+.nes-progress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 24px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: block;
+    position: relative;
+
+    /* Pixel border */
+    box-shadow:
+        inset -2px -2px rgba(0, 0, 0, 0.6),
+        inset 2px 2px rgba(232, 228, 220, 0.08),
+        0 0 0 2px rgba(232, 228, 220, 0.06);
+}
+
+/* WebKit progress bar */
+.nes-progress::-webkit-progress-bar {
+    background-color: transparent;
+}
+
+.nes-progress::-webkit-progress-value {
+    background-color: var(--color-primary);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 6px var(--glow-primary);
+}
+
+/* Firefox progress bar */
+.nes-progress::-moz-progress-bar {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 6px var(--glow-primary);
+}
+
+/* Error — Coral */
+.nes-progress.is-error::-webkit-progress-value {
+    background-color: var(--color-action);
+    box-shadow: 0 0 6px var(--glow-action);
+}
+
+.nes-progress.is-error::-moz-progress-bar {
+    background-color: var(--color-action);
+    box-shadow: 0 0 6px var(--glow-action);
+}
+
+/* Warning — Amber */
+.nes-progress.is-warning::-webkit-progress-value {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 6px var(--glow-primary);
+}
+
+.nes-progress.is-warning::-moz-progress-bar {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 6px var(--glow-primary);
+}
+
+/* Success — Sage */
+.nes-progress.is-success::-webkit-progress-value {
+    background-color: var(--color-success);
+    box-shadow: 0 0 6px var(--glow-success);
+}
+
+.nes-progress.is-success::-moz-progress-bar {
+    background-color: var(--color-success);
+    box-shadow: 0 0 6px var(--glow-success);
+}
+
+/* Primary — Amber */
+.nes-progress.is-primary::-webkit-progress-value {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 6px var(--glow-primary);
+}
+
+.nes-progress.is-primary::-moz-progress-bar {
+    background-color: var(--color-primary);
+    box-shadow: 0 0 6px var(--glow-primary);
+}
+
+
+/* ========== CONTAINERS — nes-container ========== */
+.nes-container {
+    position: relative;
+    padding: 1.5rem;
+    margin: 0;
+    border: none;
+    background-color: rgba(20, 18, 32, 0.9);
+    color: var(--text-primary);
+
+    /* Pixel border */
+    box-shadow:
+        inset -2px -2px rgba(0, 0, 0, 0.5),
+        inset 2px 2px rgba(232, 228, 220, 0.06),
+        0 0 0 2px rgba(232, 228, 220, 0.08);
+}
+
+/* Dark variant */
+.nes-container.is-dark {
+    background-color: var(--bg-panel);
+    backdrop-filter: blur(8px);
+    box-shadow:
+        inset -2px -2px rgba(0, 0, 0, 0.5),
+        inset 2px 2px rgba(232, 228, 220, 0.04),
+        0 0 0 2px var(--border-glow);
+}
+
+/* Rounded variant */
+.nes-container.is-rounded {
+    border-radius: 8px;
+    box-shadow:
+        0 0 0 2px var(--border-glow);
+}
+
+.nes-container.is-dark.is-rounded {
+    border-radius: 8px;
+    box-shadow:
+        0 0 0 2px var(--border-glow);
+}
+
+/* Warning variant (used in leaderboard for current user) */
+.nes-container.is-warning {
+    box-shadow:
+        0 0 0 2px var(--color-primary),
+        0 0 12px var(--glow-primary);
+}
+
+/* With title */
+.nes-container.with-title>.title {
+    display: inline-block;
+    position: relative;
+    top: -0.5rem;
+    margin-top: -1.5rem;
+    padding: 0 0.5rem;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+
+/* ========== INPUT — nes-input ========== */
+.nes-input {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--text-primary);
+    background-color: rgba(0, 0, 0, 0.45);
+    border: none;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+
+    /* Pixel border */
+    box-shadow:
+        inset -2px -2px rgba(232, 228, 220, 0.06),
+        inset 2px 2px rgba(0, 0, 0, 0.5),
+        0 0 0 2px var(--border-glow);
+}
+
+.nes-input:focus {
+    box-shadow:
+        inset -2px -2px rgba(232, 228, 220, 0.06),
+        inset 2px 2px rgba(0, 0, 0, 0.5),
+        0 0 0 2px var(--color-primary),
+        0 0 12px var(--glow-primary);
+}
+
+.nes-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+
+/* ========== BALLOON — nes-balloon ========== */
+.nes-balloon {
+    display: inline-block;
+    position: relative;
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    color: #111;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    max-width: 80%;
+    word-wrap: break-word;
+
+    /* Pixel border */
+    box-shadow:
+        0 0 0 2px #111;
+    border-radius: 4px;
+}
+
+/* Speech tail — left (pet messages) */
+.nes-balloon.from-left::after {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 8px solid #fff;
+    filter: drop-shadow(-2px 0 0 #111);
+}
+
+/* Speech tail — right (user messages) */
+.nes-balloon.from-right::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid #fff;
+    filter: drop-shadow(2px 0 0 #111);
+}
+
+
+/* ========== DIALOG — nes-dialog ========== */
+.nes-dialog {
+    position: relative;
+    padding: 1.5rem;
+    background-color: rgba(20, 18, 32, 0.95);
+    color: var(--text-primary);
+
+    box-shadow:
+        inset -2px -2px rgba(0, 0, 0, 0.5),
+        inset 2px 2px rgba(232, 228, 220, 0.06),
+        0 0 0 2px var(--border-glow),
+        0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.nes-dialog.is-dark {
+    background-color: var(--bg-panel);
+    backdrop-filter: blur(12px);
+}
+
+.nes-dialog.is-rounded {
+    border-radius: 12px;
+}
+
+.nes-dialog.is-dark.is-rounded {
+    border-radius: 12px;
+    box-shadow:
+        0 0 0 2px var(--border-glow),
+        0 8px 32px rgba(0, 0, 0, 0.6);
+}

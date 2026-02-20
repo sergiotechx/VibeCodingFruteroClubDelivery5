@@ -85,7 +85,7 @@
     text-align: center;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
-    color: #ccc;
+    color: var(--text-secondary);
 }
 
 .category-section {
@@ -111,34 +111,34 @@
 }
 
 .category-btn.letras {
-    background-color: #8B4513;
+    background-color: #6b4a3a;
 }
 
 .category-btn.letras:hover,
 .category-btn.letras.selected {
-    background-color: #A0522D;
+    background-color: #7d5a46;
 }
 
 .category-btn.poemas {
-    background-color: #CC7722;
+    background-color: #9a7030;
 }
 
 .category-btn.poemas:hover,
 .category-btn.poemas.selected {
-    background-color: #D2691E;
+    background-color: #b08038;
 }
 
 .category-btn.diseno {
-    background-color: #228B22;
+    background-color: #3a7858;
 }
 
 .category-btn.diseno:hover,
 .category-btn.diseno.selected {
-    background-color: #2E8B57;
+    background-color: #488a64;
 }
 
 .category-btn.selected {
-    box-shadow: 0 0 0 3px #FFD700;
+    box-shadow: 0 0 0 3px var(--color-primary);
 }
 
 .upload-section {
@@ -159,7 +159,7 @@
     max-width: 300px;
     width: 100%;
     height: auto;
-    border: 3px solid #FF8C00;
+    border: 3px solid var(--color-primary);
     border-radius: 4px;
     image-rendering: pixelated;
 }
@@ -174,8 +174,8 @@
     text-align: center;
     padding: 2rem 1rem;
     margin: 1rem 0;
-    background: rgba(124, 58, 237, 0.1);
-    border: 2px solid rgba(124, 58, 237, 0.4);
+    background: rgba(144, 128, 176, 0.1);
+    border: 2px solid rgba(144, 128, 176, 0.3);
     border-radius: 10px;
     animation: evalFadeIn 0.3s ease;
 }
@@ -214,7 +214,7 @@
 
 .eval-loading-text {
     font-size: 0.95rem;
-    color: #c4b5fd;
+    color: var(--color-subtle);
     font-weight: bold;
     margin: 0 0 0.4rem;
     min-height: 1.5em;
@@ -222,7 +222,7 @@
 
 .eval-loading-hint {
     font-size: 0.7rem;
-    color: #666;
+    color: var(--text-secondary);
     margin: 0;
     font-style: italic;
 }
@@ -232,8 +232,8 @@
     text-align: center;
     padding: 1.25rem;
     margin: 1rem 0;
-    background: rgba(248, 113, 113, 0.15);
-    border: 2px solid #f87171;
+    background: rgba(224, 80, 64, 0.12);
+    border: 2px solid var(--color-action);
     border-radius: 10px;
     animation: evalFadeIn 0.3s ease;
 }
@@ -246,7 +246,7 @@
 
 .eval-error-text {
     font-size: 0.85rem;
-    color: #fca5a5;
+    color: #e8a8a0;
     margin: 0 0 0.75rem;
     line-height: 1.4;
 }

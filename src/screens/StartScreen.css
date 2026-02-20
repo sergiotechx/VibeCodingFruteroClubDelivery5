@@ -1,4 +1,4 @@
-/* ========== Start Screen — AAA ========== */
+/* ========== Start Screen — SNES Twilight ========== */
 .start-screen {
     min-height: 100vh;
     display: flex;
@@ -8,7 +8,7 @@
     position: relative;
 }
 
-/* Ambient glow */
+/* Ambient glow — warm amber center */
 .start-screen::before {
     content: '';
     position: fixed;
@@ -17,7 +17,7 @@
     transform: translate(-50%, -50%);
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(255, 171, 0, 0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(240, 192, 64, 0.04) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
 }
@@ -37,19 +37,19 @@
 .start-title {
     font-size: 3rem;
     margin: 0;
-    color: var(--neon-primary);
-    text-shadow: 0 0 25px var(--glow-primary), 0 0 50px rgba(255, 171, 0, 0.2);
+    color: var(--color-primary);
+    text-shadow: 0 0 20px var(--glow-primary), 0 0 40px rgba(240, 192, 64, 0.15);
     letter-spacing: 0.2em;
     animation: titlePulse 4s ease-in-out infinite alternate;
 }
 
 @keyframes titlePulse {
     0% {
-        text-shadow: 0 0 25px var(--glow-primary), 0 0 50px rgba(255, 171, 0, 0.2);
+        text-shadow: 0 0 20px var(--glow-primary), 0 0 40px rgba(240, 192, 64, 0.15);
     }
 
     100% {
-        text-shadow: 0 0 35px var(--glow-primary), 0 0 70px rgba(255, 171, 0, 0.3);
+        text-shadow: 0 0 28px var(--glow-primary), 0 0 56px rgba(240, 192, 64, 0.22);
     }
 }
 
@@ -68,7 +68,7 @@
     border-radius: 16px;
     padding: 2rem;
     margin-bottom: 1rem;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(232, 228, 220, 0.04);
 }
 
 .section-title {
@@ -76,10 +76,10 @@
     font-size: 1.5rem;
     margin: 0 0 1.5rem;
     color: var(--text-primary);
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    text-shadow: 0 0 6px rgba(232, 228, 220, 0.08);
 }
 
-/* ========== Character Cards — Elemental Glow ========== */
+/* ========== Character Cards ========== */
 .character-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -88,7 +88,7 @@
 }
 
 .character-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(232, 228, 220, 0.02);
     border: 2px solid var(--border-glow);
     border-radius: 12px;
     padding: 1rem;
@@ -108,7 +108,7 @@
     transform: translate(-50%, -50%);
     width: 0;
     height: 0;
-    background: radial-gradient(circle, rgba(255, 171, 0, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(240, 192, 64, 0.08) 0%, transparent 70%);
     border-radius: 50%;
     transition: all 0.4s ease;
     z-index: 0;
@@ -120,27 +120,27 @@
 }
 
 .character-card:hover {
-    border-color: var(--neon-primary);
-    box-shadow: 0 0 20px var(--glow-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 16px var(--glow-primary);
     transform: translateY(-4px);
 }
 
 .character-card.selected {
-    border-color: var(--neon-primary);
-    background: rgba(255, 171, 0, 0.08);
+    border-color: var(--color-primary);
+    background: rgba(240, 192, 64, 0.06);
     box-shadow:
-        0 0 25px var(--glow-primary),
-        inset 0 0 20px rgba(255, 171, 0, 0.05);
+        0 0 20px var(--glow-primary),
+        inset 0 0 16px rgba(240, 192, 64, 0.04);
     animation: selectedPulse 2s ease-in-out infinite alternate;
 }
 
 @keyframes selectedPulse {
     0% {
-        box-shadow: 0 0 25px var(--glow-primary), inset 0 0 20px rgba(255, 171, 0, 0.05);
+        box-shadow: 0 0 20px var(--glow-primary), inset 0 0 16px rgba(240, 192, 64, 0.04);
     }
 
     100% {
-        box-shadow: 0 0 35px var(--glow-primary), inset 0 0 30px rgba(255, 171, 0, 0.08);
+        box-shadow: 0 0 28px var(--glow-primary), inset 0 0 24px rgba(240, 192, 64, 0.06);
     }
 }
 
@@ -160,13 +160,13 @@
     max-height: 100%;
     object-fit: contain;
     image-rendering: pixelated;
-    filter: drop-shadow(0 0 8px rgba(255, 171, 0, 0.2));
+    filter: drop-shadow(0 0 6px rgba(240, 192, 64, 0.15));
     transition: filter 0.3s ease;
 }
 
 .character-card:hover .character-sprite,
 .character-card.selected .character-sprite {
-    filter: drop-shadow(0 0 15px rgba(255, 171, 0, 0.4));
+    filter: drop-shadow(0 0 12px rgba(240, 192, 64, 0.3));
 }
 
 .character-emoji {
@@ -214,12 +214,12 @@
     width: 100%;
     font-size: 1.1rem;
     padding: 0.75rem;
-    box-shadow: 0 0 20px var(--glow-primary), inset -4px -4px #E59400, inset 4px 4px #E59400 !important;
+    box-shadow: 0 0 16px var(--glow-primary), inset -4px -4px #c89a20, inset 4px 4px #c89a20 !important;
     transition: all 0.3s ease;
 }
 
 .start-button:hover:not(:disabled) {
-    box-shadow: 0 0 35px var(--glow-primary), inset -4px -4px #E59400, inset 4px 4px #E59400 !important;
+    box-shadow: 0 0 28px var(--glow-primary), inset -4px -4px #c89a20, inset 4px 4px #c89a20 !important;
 }
 
 .start-button:disabled {

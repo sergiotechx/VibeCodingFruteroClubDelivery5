@@ -50,8 +50,8 @@
 
 .sw-close-btn:hover {
     background: rgba(255, 255, 255, 0.25);
-    border-color: #ffd700;
-    color: #ffd700;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 /* ========== Stars ========== */
@@ -135,7 +135,7 @@
 .sw-crawl p {
     font-size: 1.7rem;
     line-height: 1.8;
-    color: #ffd700;
+    color: var(--color-primary);
     margin: 0 0 2rem;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: 400;
@@ -149,14 +149,14 @@
 .sw-episode {
     font-size: 2rem !important;
     letter-spacing: 0.4em;
-    color: #4fc3f7 !important;
+    color: var(--color-info) !important;
     margin-bottom: 0.5rem !important;
     text-transform: uppercase;
 }
 
 .sw-title {
     font-size: 3.5rem;
-    color: #ffd700;
+    color: var(--color-primary);
     margin: 0 0 3rem;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     letter-spacing: 0.1em;
@@ -168,7 +168,7 @@
     font-style: italic;
     font-size: 1.8rem !important;
     margin-top: 2rem !important;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    text-shadow: 0 0 20px rgba(240, 192, 64, 0.5);
 }
 
 /* ========== Behind Scenes Image ========== */
@@ -180,9 +180,9 @@
 .sw-behind-img {
     max-width: 100%;
     width: 400px;
-    border: 3px solid #ffd700;
+    border: 3px solid var(--color-primary);
     border-radius: 8px;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 24px rgba(240, 192, 64, 0.2);
 }
 
 /* ========== Responsive ========== */

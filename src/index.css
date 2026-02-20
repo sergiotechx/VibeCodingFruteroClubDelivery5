@@ -1,37 +1,37 @@
-/* ========== Elemental Design System — AAA ========== */
+/* ========== SNES Twilight — Design System ========== */
 :root {
-    /* Deep Background */
-    --bg-dark: #0a0a0f;
-    --bg-panel: rgba(15, 15, 25, 0.85);
-    --bg-panel-hover: rgba(20, 20, 35, 0.95);
+    /* 🌑 Background — Deep Indigo */
+    --bg-dark: #0d0f1a;
+    --bg-panel: rgba(18, 16, 30, 0.88);
+    --bg-panel-hover: rgba(24, 22, 40, 0.95);
 
-    /* 🔥 Fuego */
-    --neon-fire: #ff4500;
-    --glow-fire: rgba(255, 69, 0, 0.4);
+    /* ⭐ Primary — Warm Amber */
+    --color-primary: #f0c040;
+    --glow-primary: rgba(240, 192, 64, 0.35);
 
-    /* 💧 Agua */
-    --neon-water: #00e5ff;
-    --glow-water: rgba(0, 229, 255, 0.4);
+    /* 🔥 Action / Danger — Soft Coral */
+    --color-action: #e05040;
+    --glow-action: rgba(224, 80, 64, 0.3);
 
-    /* 🌿 Tierra */
-    --neon-earth: #76ff03;
-    --glow-earth: rgba(118, 255, 3, 0.3);
+    /* 🌿 Success — Sage Green */
+    --color-success: #50b880;
+    --glow-success: rgba(80, 184, 128, 0.25);
 
-    /* 💨 Aire */
-    --neon-air: #e0b0ff;
-    --glow-air: rgba(224, 176, 255, 0.3);
+    /* 💧 Info / Water — Steel Blue */
+    --color-info: #60a0d0;
+    --glow-info: rgba(96, 160, 208, 0.25);
 
-    /* ⭐ Primary (Gold) */
-    --neon-primary: #ffab00;
-    --glow-primary: rgba(255, 171, 0, 0.4);
+    /* 💜 Subtle — Dust Lavender */
+    --color-subtle: #9080b0;
+    --glow-subtle: rgba(144, 128, 176, 0.2);
 
     /* Text */
-    --text-primary: #f0f0f0;
-    --text-secondary: #8a8a9a;
+    --text-primary: #e8e4dc;
+    --text-secondary: #706878;
 
     /* Borders */
-    --border-color: rgba(255, 255, 255, 0.08);
-    --border-glow: rgba(255, 255, 255, 0.15);
+    --border-color: rgba(232, 228, 220, 0.06);
+    --border-glow: rgba(232, 228, 220, 0.1);
 }
 
 /* ========== Global Reset ========== */
@@ -45,9 +45,8 @@ body {
     font-family: 'Press Start 2P', 'Courier New', monospace;
     background: var(--bg-dark);
     background-image:
-        radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 80%, rgba(255, 69, 0, 0.04) 0%, transparent 50%),
-        radial-gradient(ellipse at 20% 90%, rgba(0, 229, 255, 0.04) 0%, transparent 50%);
+        radial-gradient(ellipse at 50% 0%, rgba(144, 128, 176, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 75% 85%, rgba(240, 192, 64, 0.03) 0%, transparent 50%);
     background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.6;
@@ -71,125 +70,26 @@ body {
 }
 
 .leaderboard-screen {
-    background: linear-gradient(180deg, rgba(26, 26, 46, 0.9) 0%, transparent 100%);
-}
-
-/* ========== NES.css Overrides — Dark + Neon ========== */
-.nes-input {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-glow) !important;
-    transition: all 0.3s ease;
-}
-
-.nes-input:focus {
-    border-color: var(--neon-primary) !important;
-    box-shadow: 0 0 15px var(--glow-primary), inset 0 0 8px rgba(255, 171, 0, 0.1) !important;
-}
-
-/* Buttons — Neon Glow */
-.nes-btn {
-    cursor: pointer;
-    transition: all 0.25s ease;
-    position: relative;
-}
-
-.nes-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-.nes-btn:active:not(:disabled) {
-    transform: translateY(-1px);
-}
-
-.nes-btn.is-primary {
-    background-color: var(--neon-primary) !important;
-    border-color: var(--neon-primary) !important;
-    box-shadow: 0 0 12px var(--glow-primary), inset 0 -3px rgba(0, 0, 0, 0.2);
-}
-
-.nes-btn.is-primary:hover:not(:disabled) {
-    box-shadow: 0 0 25px var(--glow-primary), 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.nes-btn.is-error {
-    background-color: var(--neon-fire) !important;
-    border-color: var(--neon-fire) !important;
-    box-shadow: 0 0 12px var(--glow-fire), inset 0 -3px rgba(0, 0, 0, 0.2);
-}
-
-.nes-btn.is-error:hover:not(:disabled) {
-    box-shadow: 0 0 25px var(--glow-fire), 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.nes-btn.is-warning {
-    background-color: #ffa500 !important;
-    border-color: #ffa500 !important;
-    box-shadow: 0 0 12px rgba(255, 165, 0, 0.4), inset 0 -3px rgba(0, 0, 0, 0.2);
-}
-
-.nes-btn.is-warning:hover:not(:disabled) {
-    box-shadow: 0 0 25px rgba(255, 165, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.nes-btn.is-success {
-    background-color: var(--neon-earth) !important;
-    border-color: var(--neon-earth) !important;
-    color: #0a0a0f !important;
-    box-shadow: 0 0 12px var(--glow-earth), inset 0 -3px rgba(0, 0, 0, 0.2);
-}
-
-.nes-btn.is-success:hover:not(:disabled) {
-    box-shadow: 0 0 25px var(--glow-earth), 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Progress Bars — Neon Glow */
-.nes-progress {
-    height: 24px !important;
-    border-color: var(--border-glow) !important;
-    background-color: rgba(0, 0, 0, 0.4) !important;
-}
-
-.nes-progress.is-error::-webkit-progress-value {
-    background-color: var(--neon-fire) !important;
-    box-shadow: 0 0 10px var(--glow-fire);
-}
-
-.nes-progress.is-warning::-webkit-progress-value {
-    background-color: var(--neon-air) !important;
-    box-shadow: 0 0 10px var(--glow-air);
-}
-
-.nes-progress.is-success::-webkit-progress-value {
-    background-color: var(--neon-earth) !important;
-    box-shadow: 0 0 10px var(--glow-earth);
-}
-
-/* Dark Container */
-.nes-container.is-dark {
-    background-color: var(--bg-panel) !important;
-    border-color: var(--border-glow) !important;
-    backdrop-filter: blur(8px);
+    background: linear-gradient(180deg, rgba(18, 16, 30, 0.9) 0%, transparent 100%);
 }
 
 /* ========== Scrollbar ========== */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    background: rgba(232, 228, 220, 0.08);
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--neon-primary);
-    box-shadow: 0 0 8px var(--glow-primary);
+    background: var(--color-primary);
+    box-shadow: 0 0 6px var(--glow-primary);
 }
 
 /* ========== Utilities ========== */
