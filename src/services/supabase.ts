@@ -28,6 +28,11 @@ export interface Pet {
     happy_time_accumulated: number;
     evaluation_coins: number;
     public: boolean;
+    regenmon_id: string | null;
+    is_registered_hub: boolean;
+    total_points: number;
+    training_history: number[];
+    total_trainings: number;
 }
 
 export const db = {
@@ -80,6 +85,11 @@ export const db = {
             happy_time_accumulated: gameState.happyTimeAccumulated,
             evaluation_coins: gameState.evaluationCoins,
             public: gameState.public,
+            regenmon_id: gameState.regenmonId,
+            is_registered_hub: gameState.isRegisteredInHub,
+            total_points: gameState.totalPoints,
+            training_history: gameState.trainingHistory,
+            total_trainings: gameState.totalTrainings,
         };
 
         const { error } = await supabase

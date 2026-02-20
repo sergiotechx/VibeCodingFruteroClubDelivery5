@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { PetStage, Emotion } from '../types/game';
 import './EvolutionCountdown.css';
 
@@ -25,6 +25,14 @@ const NEXT_STAGE = {
 
 export function EvolutionCountdown({ stage, emotion, happyTimeAccumulated }: EvolutionCountdownProps) {
     const [, setTick] = useState(0);
+    const lastSyncedAt = useRef(Date.now());
+    const lastSyncedValue = useRef(happyTimeAccumulated);
+
+    // When the parent updates happyTimeAccumulated, reset the interpolation anchor
+    useEffect(() => {
+        lastSyncedAt.current = Date.now();
+        lastSyncedValue.current = happyTimeAccumulated;
+    }, [happyTimeAccumulated]);
 
     // Force re-render every second for smooth countdown
     useEffect(() => {
@@ -42,7 +50,12 @@ export function EvolutionCountdown({ stage, emotion, happyTimeAccumulated }: Evo
 
     const milestone = EVOLUTION_MILESTONES[stage];
     const nextStage = NEXT_STAGE[stage];
-    const timeRemaining = Math.max(0, milestone - happyTimeAccumulated);
+
+    // Interpolate locally: add elapsed time since last parent sync (only when not paused)
+    const isPaused = emotion === 'sad';
+    const elapsed = isPaused ? 0 : Date.now() - lastSyncedAt.current;
+    const interpolated = lastSyncedValue.current + elapsed;
+    const timeRemaining = Math.max(0, milestone - interpolated);
 
     // Convert to minutes and seconds
     const totalSeconds = Math.floor(timeRemaining / 1000);
@@ -50,9 +63,7 @@ export function EvolutionCountdown({ stage, emotion, happyTimeAccumulated }: Evo
     const seconds = totalSeconds % 60;
 
     // Calculate progress percentage
-    const progress = (happyTimeAccumulated / milestone) * 100;
-
-    const isPaused = emotion === 'sad';
+    const progress = (interpolated / milestone) * 100;
 
     return (
         <div className={`evolution-countdown ${isPaused ? 'paused' : ''}`}>

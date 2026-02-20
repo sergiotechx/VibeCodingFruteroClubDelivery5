@@ -3,9 +3,11 @@ import { usePrivy } from '@privy-io/react-auth';
 import type { GameState, PetType, PetStage, EvaluationResult } from '../types/game';
 import { getStage } from '../utils/spriteResolver';
 import { db } from '../services/supabase';
+import { regenmonHubApi } from '../services/regenmonHubApi';
 
 // const STORAGE_KEY = 'elemon_game_state'; // Removed
 const DECAY_INTERVAL = 10000; // 10 seconds
+const SYNC_INTERVAL = 5 * 1000; // 5 seconds (detect feed/gift from others)
 const DEATH_THRESHOLD = 60000; // 60 seconds at 0
 
 const INITIAL_STATE: Omit<GameState, 'petName' | 'petType'> = {
@@ -22,6 +24,11 @@ const INITIAL_STATE: Omit<GameState, 'petName' | 'petType'> = {
     happyTimeAccumulated: 0,
     evaluationCoins: 0,
     public: false,
+    regenmonId: null,
+    isRegisteredInHub: false,
+    totalPoints: 0,
+    trainingHistory: [],
+    totalTrainings: 0,
 };
 
 export function useGameState() {
@@ -61,6 +68,11 @@ export function useGameState() {
                         happyTimeAccumulated: Number(pet.happy_time_accumulated),
                         evaluationCoins: pet.evaluation_coins ?? 0,
                         public: pet.public ?? false,
+                        regenmonId: pet.regenmon_id ?? null,
+                        isRegisteredInHub: pet.is_registered_hub ?? false,
+                        totalPoints: pet.total_points ?? 0,
+                        trainingHistory: pet.training_history ?? [],
+                        totalTrainings: pet.total_trainings ?? 0,
                     };
                     setGameState(loadedState);
                 } else if (!userData) {
@@ -115,6 +127,20 @@ export function useGameState() {
             happyTimeAccumulated: 0,
         };
 
+        // Attempt to register in the Hub
+        try {
+            const hubResponse = await regenmonHubApi.register(newState);
+            if (hubResponse.success) {
+                newState.regenmonId = hubResponse.data.id;
+                newState.isRegisteredInHub = true;
+                newState.coins = hubResponse.data.balance ?? 0;          // 💰 balance del Hub
+                newState.totalPoints = hubResponse.data.totalPoints ?? 0; // 🍇 puntos del Hub
+            }
+        } catch (error) {
+            console.error('Failed to register with Hub at start:', error);
+            // proceed even if hub fails, we can retry later or just play local mode
+        }
+
         setGameState(newState);
 
         // Save immediately
@@ -138,6 +164,14 @@ export function useGameState() {
         }
     }, [user?.id]);
 
+    // Update coins from external source (e.g., feed/gift responses)
+    const updateCoins = useCallback((newBalance: number) => {
+        setGameState(prev => {
+            if (!prev) return prev;
+            return { ...prev, coins: newBalance };
+        });
+    }, []);
+
     // Toggle public profile status
     const togglePublic = useCallback(async () => {
         if (!user?.id) return;
@@ -156,36 +190,52 @@ export function useGameState() {
     }, [user?.id]);
 
     // Perform game actions (eat, play, train)
-    const performAction = useCallback((action: 'eat' | 'play' | 'train') => {
-        setGameState((prev) => {
-            if (!prev) return prev;
+    const performAction = useCallback(async (action: 'eat' | 'play' | 'train') => {
+        if (!gameState) return;
 
-            let newStats = { ...prev.stats };
-            let newCoins = prev.coins;
+        let newStats = { ...gameState.stats };
+        let newTrainingHistory = [...gameState.trainingHistory];
+        let newTotalTrainings = gameState.totalTrainings;
 
-            if (action === 'eat') {
-                if (newCoins < 10) return prev; // Cannot eat if insufficient coins
-                newCoins -= 10;
-                newStats.hunger = Math.min(100, newStats.hunger + 20);
-            } else if (action === 'play') {
-                newCoins += 5;
-                newStats.happiness = Math.min(100, newStats.happiness + 20);
-            } else if (action === 'train') {
-                newCoins += 6;
-                newStats.energy = Math.min(100, newStats.energy + 20);
-                newStats.hunger = Math.max(0, newStats.hunger - 1); // "resta un punto de hunger"
+        // Stat changes only — no coin earn/spend
+        if (action === 'eat') {
+            newStats.hunger = Math.min(100, newStats.hunger + 20);
+        } else if (action === 'play') {
+            newStats.happiness = Math.min(100, newStats.happiness + 20);
+        } else if (action === 'train') {
+            newStats.energy = Math.min(100, newStats.energy + 20);
+            newStats.hunger = Math.max(0, newStats.hunger - 1);
+            newTotalTrainings += 1;
+            newTrainingHistory.push(Date.now()); // 🕐 timestamp only on train
+        }
+
+        const deathTimer = (newStats.hunger > 0 && newStats.happiness > 0 && newStats.energy > 0) ? null : gameState.deathTimer;
+
+        let updatedState = {
+            ...gameState,
+            stats: newStats,
+            totalTrainings: newTotalTrainings,
+            trainingHistory: newTrainingHistory,
+            deathTimer: deathTimer,
+            lastUpdate: Date.now(),
+        };
+
+        // Always sync with Hub on every action
+        if (gameState.regenmonId) {
+            try {
+                const hubResponse = await regenmonHubApi.sync(gameState.regenmonId, updatedState);
+                if (hubResponse.success) {
+                    updatedState.coins = hubResponse.data.balance ?? updatedState.coins;          // 💰
+                    updatedState.totalPoints = hubResponse.data.totalPoints ?? updatedState.totalPoints; // 🍇
+                }
+            } catch (error) {
+                console.error("Failed to sync:", error);
+                // Game continues normally even if sync fails
             }
+        }
 
-            return {
-                ...prev,
-                stats: newStats,
-                coins: newCoins,
-                lastUpdate: Date.now(),
-                // Reset death timer if relevant stat goes above 0 (simplified logic, decay handles this mostly)
-                deathTimer: (newStats.hunger > 0 && newStats.happiness > 0 && newStats.energy > 0) ? null : prev.deathTimer,
-            };
-        });
-    }, []);
+        setGameState(updatedState);
+    }, [gameState]);
 
     // Stat decay and death detection
     useEffect(() => {
@@ -255,49 +305,83 @@ export function useGameState() {
         return () => clearInterval(interval);
     }, [gameState]);
 
-    // Handle evaluation results
-    const handleEvaluation = useCallback((result: EvaluationResult) => {
-        setGameState((prev) => {
-            if (!prev) return prev;
+    // Passive Sync Effect (runs every 5 minutes)
+    useEffect(() => {
+        if (!gameState?.regenmonId) return;
 
-            // Calculate coin change based on score
-            let coinChange = 0;
-            if (result.score < 50) coinChange = -3;
-            else if (result.score >= 60) coinChange = 10;
-            // score 50-59 = 0 coins (no change)
-
-            // IMPORTANT: Coins are added/subtracted from the main coins field
-            const newCoins = Math.max(0, prev.coins + coinChange);
-
-            // evaluation_coins counter only tracks GAINS (not losses)
-            const newEvalCoins = prev.evaluationCoins + Math.max(0, coinChange);
-
-            // Auto-evolution if 50 evaluation coins accumulated
-            let newStage = prev.stage;
-            let finalEvalCoins = newEvalCoins;
-            let finalCoins = newCoins;
-
-            if (newEvalCoins >= 50 && prev.stage !== 'adult' && prev.stage !== 'dead') {
-                // Force evolution
-                if (prev.stage === 'egg') newStage = 'baby';
-                else if (prev.stage === 'baby') newStage = 'adult';
-
-                // Deduct 50 coins from main balance as "training cost"
-                finalCoins = Math.max(0, newCoins - 50);
-
-                // Reset evaluation counter
-                finalEvalCoins = 0;
+        const syncInterval = setInterval(async () => {
+            try {
+                const hubResponse = await regenmonHubApi.sync(gameState.regenmonId!, gameState);
+                if (hubResponse.success) {
+                    setGameState(prev => {
+                        if (!prev) return prev;
+                        return {
+                            ...prev,
+                            totalPoints: hubResponse.data.totalPoints,
+                            coins: hubResponse.data.balance ?? prev.coins,
+                        };
+                    });
+                }
+            } catch (error) {
+                console.error("Failed passive hub sync:", error);
             }
+        }, SYNC_INTERVAL);
 
-            return {
-                ...prev,
-                coins: finalCoins,              // Visible field in UI
-                evaluationCoins: finalEvalCoins, // Internal counter
-                stage: newStage,
-                lastUpdate: Date.now()
-            };
-        });
-    }, []);
+        return () => clearInterval(syncInterval);
+    }, [gameState?.regenmonId, gameState?.stats, gameState?.totalPoints, gameState?.trainingHistory]);
+
+    // Handle evaluation results
+    const handleEvaluation = useCallback(async (result: EvaluationResult) => {
+        if (!gameState) return;
+
+        // Calculate stat change based on score
+        let statChange = 0;
+        if (result.score < 50) statChange = -5;
+        else if (result.score >= 60) statChange = 10;
+        // score 50-59 = no change
+
+        const newStats = {
+            hunger: Math.max(0, Math.min(100, gameState.stats.hunger + statChange)),
+            happiness: Math.max(0, Math.min(100, gameState.stats.happiness + statChange)),
+            energy: Math.max(0, Math.min(100, gameState.stats.energy + statChange)),
+        };
+
+        // evaluationCoins counter tracks gains for auto-evolution
+        const newEvalCoins = gameState.evaluationCoins + Math.max(0, statChange);
+
+        // Auto-evolution if 50 evaluation points accumulated
+        let newStage = gameState.stage;
+        let finalEvalCoins = newEvalCoins;
+
+        if (newEvalCoins >= 50 && gameState.stage !== 'adult' && gameState.stage !== 'dead') {
+            if (gameState.stage === 'egg') newStage = 'baby';
+            else if (gameState.stage === 'baby') newStage = 'adult';
+            finalEvalCoins = 0;
+        }
+
+        let updatedState: GameState = {
+            ...gameState,
+            stats: newStats,
+            evaluationCoins: finalEvalCoins,
+            stage: newStage,
+            lastUpdate: Date.now(),
+        };
+
+        // Sync with Hub (same as eat/play/train actions)
+        if (gameState.regenmonId) {
+            try {
+                const hubResponse = await regenmonHubApi.sync(gameState.regenmonId, updatedState);
+                if (hubResponse.success) {
+                    updatedState.coins = hubResponse.data.balance ?? updatedState.coins;
+                    updatedState.totalPoints = hubResponse.data.totalPoints ?? updatedState.totalPoints;
+                }
+            } catch (error) {
+                console.error("Failed to sync after evaluation:", error);
+            }
+        }
+
+        setGameState(updatedState);
+    }, [gameState]);
 
     return {
         gameState,
@@ -306,6 +390,7 @@ export function useGameState() {
         togglePublic,
         performAction,
         handleEvaluation,
+        updateCoins,
         isLoading,
     };
 }

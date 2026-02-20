@@ -36,6 +36,20 @@ body {
 
 #root {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Screen base styles */
+.screen {
+    flex: 1;
+    min-height: calc(100vh - 60px); /* Account for Header height */
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+}
+
+.leaderboard-screen {
+    background: linear-gradient(180deg, #1a1a2e 0%, var(--bg-dark) 100%);
 }
 
 /* SNES.css Overrides for Dark Theme */

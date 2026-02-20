@@ -6,6 +6,8 @@ import { ResetModal } from '../components/ResetModal';
 import { EvolutionCountdown } from '../components/EvolutionCountdown';
 import { ChatArea } from '../components/ChatArea';
 import { OpinionDrawer } from '../components/OpinionDrawer';
+import { ExploreWorldModal } from '../components/ExploreWorldModal';
+import { MessagesModal } from '../components/MessagesModal';
 import './GameScreen.css';
 
 interface GameScreenProps {
@@ -13,12 +15,14 @@ interface GameScreenProps {
     onAction: (action: 'eat' | 'play' | 'train') => void;
     onEvaluation: (result: EvaluationResult) => void;
     onReset: () => void;
-    onTogglePublic: () => void;
+    onCoinsUpdate?: (newBalance: number) => void;
 }
 
-export function GameScreen({ gameState, onAction, onEvaluation, onReset, onTogglePublic }: GameScreenProps) {
+export function GameScreen({ gameState, onAction, onEvaluation, onReset, onCoinsUpdate }: GameScreenProps) {
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
     const [isOpinionOpen, setIsOpinionOpen] = useState(false);
+    const [isExploreOpen, setIsExploreOpen] = useState(false);
+    const [isMessagesOpen, setIsMessagesOpen] = useState(false);
 
     // Pause background music when OpinionDrawer is open
     const { isMuted, toggleMute } = useAudioPlayer('/assets/music.mp3', isOpinionOpen);
@@ -46,31 +50,15 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset, onToggl
 
     return (
         <div className="game-screen">
-            {/* Public Profile Toggle Button */}
-            <button
-                className={`nes-btn is-small ${gameState.public ? 'is-success' : 'is-primary'}`}
-                onClick={onTogglePublic}
-                style={{
-                    position: 'absolute',
-                    top: '70px', // Below the logout button (top: 20px + height ~40px + gap)
-                    right: '20px',
-                    zIndex: 1000,
-                    fontSize: '0.6rem',
-                    padding: '0.2rem 0.5rem',
-                    whiteSpace: 'nowrap'
-                }}
-            >
-                {gameState.public ? 'Public Profile ON' : 'Public Profile OFF'}
-            </button>
-
             <div className="content-wrapper">
                 <div className="game-container">
                     {/* Header */}
                     <header className="game-header">
                         <div className="header-info">
                             <h1 className="pet-name">{gameState.petName}</h1>
-                            <div className="coin-counter">
-                                💰 {gameState.coins}
+                            <div className="coin-counter" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                                <span title="Monedas Locales">💰 {gameState.coins}</span>
+                                <span title="$FRUTA del HUB">🍇 {gameState.totalPoints || 0}</span>
                             </div>
                         </div>
                         <div className="header-controls">
@@ -158,12 +146,11 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset, onToggl
                         <button
                             className="nes-btn is-error action-btn"
                             onClick={() => onAction('eat')}
-                            disabled={gameState.stage === 'dead' || gameState.stats.hunger >= 100 || gameState.coins < 10}
-                            title={gameState.coins < 10 ? 'Not enough coins (10)' : 'Cost: 10 coins'}
+                            disabled={gameState.stage === 'dead' || gameState.stats.hunger >= 100}
+                            title="Alimentar a tu mascota"
                         >
                             <div className="btn-content">
                                 <span>🍖 Comer</span>
-                                <span className="btn-cost">-10💰</span>
                             </div>
                         </button>
                         <button
@@ -173,7 +160,6 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset, onToggl
                         >
                             <div className="btn-content">
                                 <span>👋 Jugar</span>
-                                <span className="btn-gain">+5💰</span>
                             </div>
                         </button>
                         <button
@@ -183,7 +169,6 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset, onToggl
                         >
                             <div className="btn-content">
                                 <span>🏋️ Entrenar</span>
-                                <span className="btn-gain">+6💰</span>
                             </div>
                         </button>
                         <button
@@ -194,6 +179,27 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset, onToggl
                             <div className="btn-content">
                                 <span>🤓 Estudiar</span>
                             </div>
+                        </button>
+                        <button
+                            className="nes-btn action-btn messages-btn"
+                            onClick={() => setIsMessagesOpen(true)}
+                            disabled={!gameState.regenmonId}
+                            title={!gameState.regenmonId ? 'Necesitas estar registrado en el Hub' : 'Leer mensajes recibidos'}
+                        >
+                            <div className="btn-content">
+                                <span>📬 Mensajes</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    {/* Explore the World Button */}
+                    <div style={{ marginTop: '0.5rem' }}>
+                        <button
+                            className="nes-btn is-primary action-btn"
+                            onClick={() => setIsExploreOpen(true)}
+                            style={{ width: '100%', fontSize: '0.9rem' }}
+                        >
+                            🌍 Explorar el Mundo
                         </button>
                     </div>
 
@@ -229,6 +235,18 @@ export function GameScreen({ gameState, onAction, onEvaluation, onReset, onToggl
                 onEvaluationComplete={handleEvaluationComplete}
                 currentStage={gameState.stage}
                 evaluationCoins={gameState.evaluationCoins ?? 0}
+            />
+            <ExploreWorldModal
+                isOpen={isExploreOpen}
+                onClose={() => setIsExploreOpen(false)}
+                gameState={gameState}
+                onCoinsUpdate={onCoinsUpdate}
+            />
+            <MessagesModal
+                isOpen={isMessagesOpen}
+                onClose={() => setIsMessagesOpen(false)}
+                petName={gameState.petName}
+                regenmonId={gameState.regenmonId}
             />
         </div>
     );

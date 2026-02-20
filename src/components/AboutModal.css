@@ -1,0 +1,206 @@
+/* ========== Overlay ========== */
+.sw-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: swFadeIn 0.5s ease;
+}
+
+@keyframes swFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ========== Container ========== */
+.sw-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ========== Close Button ========== */
+.sw-close-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2010;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.sw-close-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #ffd700;
+    color: #ffd700;
+}
+
+/* ========== Stars ========== */
+.sw-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.sw-star {
+    position: absolute;
+    background: #fff;
+    border-radius: 0;
+    animation: swTwinkle 2s ease-in-out infinite alternate;
+}
+
+@keyframes swTwinkle {
+    0% {
+        opacity: 0.15;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.25;
+    }
+}
+
+/* ========== Top Fade ========== */
+.sw-fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, #000 0%, #000 20%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ========== Perspective Crawl ========== */
+.sw-perspective {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 600px;
+    height: 100%;
+    perspective: 350px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.sw-crawl {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    text-align: center;
+    transform-origin: 50% 100%;
+    transform: rotateX(22deg);
+    animation: swCrawl 90s linear forwards;
+}
+
+@keyframes swCrawl {
+    0% {
+        top: 100%;
+    }
+
+    100% {
+        top: -350%;
+    }
+}
+
+/* ========== Text Styles ========== */
+.sw-crawl p {
+    font-size: 1.7rem;
+    line-height: 1.8;
+    color: #ffd700;
+    margin: 0 0 2rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 400;
+}
+
+.sw-crawl strong {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.sw-episode {
+    font-size: 2rem !important;
+    letter-spacing: 0.4em;
+    color: #4fc3f7 !important;
+    margin-bottom: 0.5rem !important;
+    text-transform: uppercase;
+}
+
+.sw-title {
+    font-size: 3.5rem;
+    color: #ffd700;
+    margin: 0 0 3rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.sw-vibe {
+    font-style: italic;
+    font-size: 1.8rem !important;
+    margin-top: 2rem !important;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+/* ========== Behind Scenes Image ========== */
+.sw-image-container {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.sw-behind-img {
+    max-width: 100%;
+    width: 400px;
+    border: 3px solid #ffd700;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 600px) {
+    .sw-crawl p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .sw-title {
+        font-size: 1.8rem;
+    }
+
+    .sw-perspective {
+        width: 90%;
+    }
+
+    .sw-behind-img {
+        width: 280px;
+    }
+}

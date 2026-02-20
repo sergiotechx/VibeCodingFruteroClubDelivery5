@@ -18,20 +18,23 @@ export async function evaluateImage(
     imageFile: File,
     category: EvaluationCategory
 ): Promise<EvaluationResult> {
+    // Validar tamaño
+    if (imageFile.size > 5 * 1024 * 1024) {
+        throw new Error('La imagen debe ser menor a 5MB');
+    }
+
+    // Validar tipo
+    if (!['image/png', 'image/jpeg'].includes(imageFile.type)) {
+        throw new Error('Solo se permiten imágenes PNG o JPG');
+    }
+
+    const base64 = await fileToBase64(imageFile);
+
+    // 30 second timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+
     try {
-        // Validar tamaño
-        if (imageFile.size > 5 * 1024 * 1024) {
-            throw new Error('La imagen debe ser menor a 5MB');
-        }
-
-        // Validar tipo
-        if (!['image/png', 'image/jpeg'].includes(imageFile.type)) {
-            throw new Error('Solo se permiten imágenes PNG o JPG');
-        }
-
-        const base64 = await fileToBase64(imageFile);
-
-        // Llamar directamente a OpenAI API
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -59,11 +62,14 @@ export async function evaluateImage(
                     }
                 ],
                 max_tokens: 150
-            })
+            }),
+            signal: controller.signal,
         });
 
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
-            throw new Error(`OpenAI API error: ${response.status}`);
+            throw new Error(`Error del servidor de evaluación (${response.status}). Intenta de nuevo.`);
         }
 
         const data = await response.json();
@@ -76,10 +82,15 @@ export async function evaluateImage(
 
         return { score, feedback };
     } catch (error) {
-        console.error('Error evaluating image:', error);
-        return {
-            score: 50,
-            feedback: '⚠️ Sistema en mantenimiento. Recompensa base asignada.'
-        };
+        clearTimeout(timeoutId);
+        if (error instanceof DOMException && error.name === 'AbortError') {
+            throw new Error('La evaluación tardó demasiado (más de 30s). Intenta de nuevo.');
+        }
+        // Re-throw with a user-friendly message if it's a network error
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+            throw new Error('No se pudo conectar al servidor de evaluación. Verifica tu conexión.');
+        }
+        throw error;
     }
 }
+

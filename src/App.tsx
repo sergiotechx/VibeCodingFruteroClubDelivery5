@@ -7,17 +7,25 @@ import { LoginScreen } from './screens/LoginScreen';
 import { Header } from './components/Header';
 import { useGameState } from './hooks/useGameState';
 import type { PetType } from './types/game';
+import { LeaderboardScreen } from './screens/LeaderboardScreen';
 
-type Screen = 'intro' | 'auth' | 'start' | 'game';
+type Screen = 'intro' | 'leaderboard' | 'auth' | 'start' | 'game';
 
 function App() {
-    const [currentScreen, setCurrentScreen] = useState<Screen>('intro');
-    const { gameState, startGame, resetGame, performAction, handleEvaluation, isLoading, togglePublic } = useGameState();
     const { ready, authenticated } = usePrivy();
+    // If already authenticated on load (e.g. after OAuth redirect), skip intro
+    const [currentScreen, setCurrentScreen] = useState<Screen>(
+        (ready && authenticated) ? 'auth' : 'intro'
+    );
+    const { gameState, startGame, resetGame, performAction, handleEvaluation, updateCoins, isLoading } = useGameState();
 
     // Effect to handle navigation based on auth and game state
     useEffect(() => {
         if (!ready || isLoading) return;
+
+        if (currentScreen === 'intro' || currentScreen === 'leaderboard') {
+            return;
+        }
 
         if (authenticated) {
             if (gameState) {
@@ -29,22 +37,29 @@ function App() {
             }
         } else {
             // If not authenticated and not in intro, go to auth
-            if (currentScreen !== 'intro') {
+            if (currentScreen !== 'auth') {
                 setCurrentScreen('auth');
             }
         }
-    }, [ready, authenticated, gameState, currentScreen, isLoading]);
+    }, [ready, authenticated, gameState, currentScreen]);
 
+    // Handlers
     const handleIntroComplete = () => {
-        if (authenticated) {
-            setCurrentScreen(gameState ? 'game' : 'start');
-        } else {
+        setCurrentScreen('leaderboard');
+    };
+
+    const handlePlayFromLeaderboard = () => {
+        if (!authenticated) {
             setCurrentScreen('auth');
+        } else if (gameState) {
+            setCurrentScreen('game');
+        } else {
+            setCurrentScreen('start');
         }
     };
 
-    const handleStartGame = (petName: string, petType: PetType) => {
-        startGame(petName, petType);
+    const handleStartGame = async (petName: string, petType: PetType) => {
+        await startGame(petName, petType);
         setCurrentScreen('game');
     };
 
@@ -82,6 +97,13 @@ function App() {
                 <IntroScreen onComplete={handleIntroComplete} />
             )}
 
+            {currentScreen === 'leaderboard' && (
+                <LeaderboardScreen
+                    onPlayClick={handlePlayFromLeaderboard}
+                    gameState={gameState}
+                />
+            )}
+
             {currentScreen === 'auth' && (
                 <LoginScreen />
             )}
@@ -96,7 +118,7 @@ function App() {
                     onAction={handleAction}
                     onEvaluation={handleEvaluation}
                     onReset={handleReset}
-                    onTogglePublic={togglePublic}
+                    onCoinsUpdate={updateCoins}
                 />
             )}
         </>

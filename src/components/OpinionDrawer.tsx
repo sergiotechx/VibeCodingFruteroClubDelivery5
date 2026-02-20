@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { EvaluationCategory, EvaluationResult, PetStage } from '../types/game';
 import { evaluateImage } from '../services/evaluationService';
@@ -25,6 +25,24 @@ export function OpinionDrawer({ isOpen, onClose, petName, onEvaluationComplete, 
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [result, setResult] = useState<EvaluationResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [loadingMsg, setLoadingMsg] = useState(0);
+
+    const LOADING_MESSAGES = [
+        '🔄 Evaluando tu trabajo...',
+        '🤔 Tu ELEMON está pensando...',
+        '📝 Analizando la imagen...',
+        '✨ Casi listo...',
+    ];
+
+    // Rotate loading messages
+    useEffect(() => {
+        if (!isEvaluating) return;
+        setLoadingMsg(0);
+        const interval = setInterval(() => {
+            setLoadingMsg(prev => (prev + 1) % 4);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, [isEvaluating]);
 
     // ... (handlers remain the same)
 
@@ -68,8 +86,9 @@ export function OpinionDrawer({ isOpen, onClose, petName, onEvaluationComplete, 
             const evaluationResult = await evaluateImage(imageFile, category);
             setResult(evaluationResult);
         } catch (err) {
-            setError('Error al evaluar la imagen');
-            console.error(err);
+            const message = err instanceof Error ? err.message : 'Error desconocido al evaluar la imagen';
+            setError(message);
+            console.error('Evaluation error:', err);
         } finally {
             setIsEvaluating(false);
         }
@@ -146,7 +165,7 @@ export function OpinionDrawer({ isOpen, onClose, petName, onEvaluationComplete, 
                     ) : (
                         <>
                             <p style={{ fontSize: '0.85rem', marginBottom: '0.5rem', color: '#aaa' }}>
-                                Progreso Evolución ({evaluationCoins}/50 🪙)
+                                Progreso Evolución ({evaluationCoins}/50 ⭐)
                             </p>
                             <progress
                                 className={`nes-progress ${evaluationCoins >= 40 ? 'is-success' : 'is-primary'}`}
@@ -155,7 +174,7 @@ export function OpinionDrawer({ isOpen, onClose, petName, onEvaluationComplete, 
                                 style={{ height: '24px' }}
                             ></progress>
                             <p style={{ fontSize: '0.7rem', marginTop: '0.5rem', color: '#666' }}>
-                                *Al llegar a 50 monedas de estudio, evolucionará.
+                                *Al llegar a 50 puntos de estudio, evolucionará.
                             </p>
                         </>
                     )}
@@ -211,7 +230,22 @@ export function OpinionDrawer({ isOpen, onClose, petName, onEvaluationComplete, 
 
                         {/* Error Message */}
                         {error && (
-                            <div className="nes-text is-error error-message">{error}</div>
+                            <div className="eval-error-box">
+                                <span className="eval-error-icon">⚠️</span>
+                                <p className="eval-error-text">{error}</p>
+                                <button className="nes-btn is-warning eval-retry-btn" onClick={() => { setError(null); handleEvaluate(); }}>
+                                    🔄 Reintentar
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Loading Overlay */}
+                        {isEvaluating && (
+                            <div className="eval-loading-overlay">
+                                <div className="eval-loading-spinner">🔮</div>
+                                <p className="eval-loading-text">{LOADING_MESSAGES[loadingMsg]}</p>
+                                <p className="eval-loading-hint">Esto puede tardar unos segundos...</p>
+                            </div>
                         )}
 
                         {/* Action Buttons */}
@@ -240,9 +274,9 @@ export function OpinionDrawer({ isOpen, onClose, petName, onEvaluationComplete, 
 
                             {/* Coin Feedback */}
                             <div className="coin-feedback" style={{ marginBottom: '1rem', fontWeight: 'bold' }}>
-                                {result.score >= 60 && <span style={{ color: '#228B22' }}>¡Ganaste 10 monedas! 💰</span>}
-                                {result.score >= 50 && result.score < 60 && <span style={{ color: '#8B4513' }}>Sin cambios en monedas 😐</span>}
-                                {result.score < 50 && <span style={{ color: '#D8000C' }}>Perdiste 3 monedas 💸</span>}
+                                {result.score >= 60 && <span style={{ color: '#228B22' }}>¡Tus stats subieron +10! 💪</span>}
+                                {result.score >= 50 && result.score < 60 && <span style={{ color: '#8B4513' }}>Sin cambios en stats 😐</span>}
+                                {result.score < 50 && <span style={{ color: '#D8000C' }}>Tus stats bajaron -5 😰</span>}
                             </div>
 
                             <p className="result-feedback">{result.feedback}</p>

@@ -154,6 +154,19 @@
     margin-bottom: 1rem;
 }
 
+/* Mensajes button spans 2 columns on the second row */
+.actions-section .messages-btn {
+    grid-column: 2 / 4;
+    background-color: #5b21b6;
+    color: #e0d4fc;
+    border-color: #7c3aed;
+}
+
+.actions-section .messages-btn:hover:not(:disabled) {
+    background-color: #6d28d9;
+}
+
+
 .action-btn {
     font-size: 0.9rem;
     padding: 0.5rem 0.5rem;

@@ -25,6 +25,11 @@ export interface GameState {
     coins: number;
     evaluationCoins: number; // internal counter for auto-evolution trigger
     public: boolean; // public profile visibility
+    regenmonId: string | null; // ID from Regenmon HUB API
+    isRegisteredInHub: boolean;
+    totalPoints: number; // $FRUTA tokens from the HUB
+    trainingHistory: number[]; // timestamps of training sessions
+    totalTrainings: number; // number of training sessions
 }
 
 export interface CharacterOption {
