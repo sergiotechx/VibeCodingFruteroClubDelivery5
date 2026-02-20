@@ -115,7 +115,7 @@ export function useGameState() {
     }, [gameState, user?.id]);
 
     // Initialize new game
-    const startGame = useCallback(async (petName: string, petType: PetType) => {
+    const startGame = useCallback(async (petName: string, ownerName: string, petType: PetType) => {
         if (!user?.id) return;
 
         const newState: GameState = {
@@ -129,7 +129,7 @@ export function useGameState() {
 
         // Attempt to register in the Hub
         try {
-            const hubResponse = await regenmonHubApi.register(newState);
+            const hubResponse = await regenmonHubApi.register(newState, ownerName);
             if (hubResponse.success) {
                 newState.regenmonId = hubResponse.data.id;
                 newState.isRegisteredInHub = true;

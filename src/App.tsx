@@ -58,8 +58,8 @@ function App() {
         }
     };
 
-    const handleStartGame = async (petName: string, petType: PetType) => {
-        await startGame(petName, petType);
+    const handleStartGame = async (petName: string, ownerName: string, petType: PetType) => {
+        await startGame(petName, ownerName, petType);
         setCurrentScreen('game');
     };
 

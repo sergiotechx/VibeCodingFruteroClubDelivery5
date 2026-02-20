@@ -99,8 +99,7 @@ export interface HubMessagesResponse {
 }
 
 export const regenmonHubApi = {
-    async register(gameState: GameState): Promise<HubRegisterResponse> {
-        // Use a default sprite representation since the actual sprite is generated client-side
+    async register(gameState: GameState, ownerName: string = 'elemon_user'): Promise<HubRegisterResponse> {
         const appUrl = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
 
         try {
@@ -111,9 +110,9 @@ export const regenmonHubApi = {
                 },
                 body: JSON.stringify({
                     name: gameState.petName,
-                    ownerName: "elemon_user", // Fallback, could be privy user id later
+                    ownerName: ownerName,
                     appUrl: appUrl,
-                    sprite: `${appUrl}/assets/${gameState.petType}/egg_happy.png` // Default representative sprite
+                    sprite: `${appUrl}/assets/${gameState.petType}-adult_happy.png`
                 }),
             });
 

@@ -3,7 +3,7 @@ import type { PetType, CharacterOption } from '../types/game';
 import './StartScreen.css';
 
 interface StartScreenProps {
-    onStart: (petName: string, petType: PetType) => void;
+    onStart: (petName: string, ownerName: string, petType: PetType) => void;
 }
 
 const CHARACTERS: CharacterOption[] = [
@@ -15,11 +15,12 @@ const CHARACTERS: CharacterOption[] = [
 
 export function StartScreen({ onStart }: StartScreenProps) {
     const [petName, setPetName] = useState('');
+    const [ownerName, setOwnerName] = useState('elemon_user');
     const [selectedType, setSelectedType] = useState<PetType | null>(null);
 
     const handleStart = () => {
         if (petName.trim() && selectedType) {
-            onStart(petName.trim(), selectedType);
+            onStart(petName.trim(), ownerName.trim() || 'elemon_user', selectedType);
         }
     };
 
@@ -61,7 +62,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
 
                     <div className="name-input-section">
                         <label htmlFor="pet-name" className="input-label">
-                            Name your companion:
+                            Elemon Name:
                         </label>
                         <input
                             id="pet-name"
@@ -70,7 +71,20 @@ export function StartScreen({ onStart }: StartScreenProps) {
                             placeholder="Enter name..."
                             value={petName}
                             onChange={(e) => setPetName(e.target.value)}
-                            maxLength={12}
+                            maxLength={15}
+                        />
+
+                        <label htmlFor="owner-name" className="input-label" style={{ marginTop: '12px' }}>
+                            Owner Name:
+                        </label>
+                        <input
+                            id="owner-name"
+                            type="text"
+                            className="nes-input"
+                            placeholder="elemon_user"
+                            value={ownerName}
+                            onChange={(e) => setOwnerName(e.target.value)}
+                            maxLength={15}
                         />
                     </div>
 
