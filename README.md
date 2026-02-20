@@ -19,9 +19,7 @@ Este proyecto ha sido construido utilizando tecnologías modernas de desarrollo 
 - **[Vite](https://vitejs.dev/):** Entorno de desarrollo ultrarrápido.
 - **[Supabase](https://supabase.com/):** Backend-as-a-Service para base de datos y persistencia en la nube.
 - **[Privy](https://www.privy.io/):** Solución de autenticación y gestión de usuarios Web3/Web2.
-- **[NES.css](https://nostalgic-css.github.io/NES.css/):** Framework CSS para conseguir el estilo NES (8-bit) sin esfuerzo.
-- **CSS3:** Animaciones personalizadas y estilos responsivos.
-- **Supabase Edge Functions (Local):** Lógica serverless implementada localmente para la evaluación de imágenes con IA.
+- **CSS3:** Sistema de estilos retro 16-bits personalizado desde cero, con animaciones y estilos responsivos.
 - **[OpenAI GPT-4o](https://openai.com/):** Modelo de visión para analizar y calificar las comidas de tu mascota.
 
 ## 🛠️ Herramientas y Plataformas
@@ -54,15 +52,22 @@ Sigue estos pasos para ejecutar el juego en tu máquina local:
     Visita la URL que aparece en la terminal (usualmente `http://localhost:5173`).
 
 ## ✨ Características Destacadas
-- **Sistema de Economía (¡Nuevo!):** Gana monedas jugando y entrenando para alimentar a tu mascota. Gestión de recursos para sobrevivir.
-- **Persistencia en la Nube (¡Nuevo!):** Tu progreso se guarda automáticamente en Supabase. Juega desde cualquier lugar sin perder tus datos.
-- **Autenticación (¡Nuevo!):** Login seguro a través de Privy.
+- **Sistema de Economía:** Gana monedas jugando y entrenando para alimentar a tu mascota. Gestión de recursos para sobrevivir.
+- **Persistencia en la Nube:** Tu progreso se guarda automáticamente en Supabase. Juega desde cualquier lugar sin perder tus datos.
+- **Autenticación:** Login seguro a través de Privy.
 - **Sistema de Emociones:** Tu mascota reacciona visualmente según su estado de ánimo.
-- **Contador de Evolución:** Un timer visual que te indica cuánto falta para la siguiente etapa (¡solo avanza si tu mascota está feliz!).
-- **Modo Oscuro/Retro:** Diseño visualmente atractivo y nostálgico.
-- **Evaluación de Estudio con IA (¡Nuevo!):** Tu ELEMON evalúa una canción, poema o diseño UI y te da una opinión. Además, ganas puntos de estudio y tu ELEMON puede evolucionar.
-- **Perfil de Usuario (¡Nuevo!):** Visualización de avatar de Google y experiencia personalizada en el header.
-- **Chat con IA:** ¡Habla con tu mascota! Integración con **OpenAI** para tener conversaciones únicas basadas en la personalidad y estado de tu ELEMON.
+- **Contador de Evolución:** Un timer visual que te indica cuánto falta para la siguiente etapa.
+- **Estilo Retro Custom 16-bits (¡Nuevo!):** Diseño visual nostálgico con un sistema CSS personalizado libre de dependencias.
+- **Tablero de Líderes y Perfiles (¡Nuevo!):** Ranking global de jugadores y visualización detallada de los perfiles públicos de otros Elemon.
+- **Hub "Explora el Mundo" (¡Nuevo!):** Interactúa con la comunidad, alimenta, regala y envía mensajes mediante la API.
+- **Visibilidad Pública (¡Nuevo!):** Control total sobre la privacidad de tu Elemon con un toggle público/privado.
+- **Evaluación de Estudio con IA:** Tu ELEMON evalúa una canción, poema o diseño UI y te da una opinión, con recompensas de estudio.
+- **Perfil de Usuario:** Visualización de avatar de Google y experiencia personalizada en el header.
+- **Chat con IA:** Habla con tu mascota gracias a la integración con **OpenAI** para tener conversaciones únicas basadas en su personalidad.
 
 ---
-*Desarrollado como parte del Delivery 4 para VibeCode Bootcamp.*
+### 🎬 Detrás de Escenas
+![Detrás de escenas](./public/assets/behind_scenes.png)
+
+*Desarrollado como la **Entrega Final** para VibeCode Bootcamp.*
+**Ningún ELEMON fue lastimado en el desarrollo de ninguna entrega.**
