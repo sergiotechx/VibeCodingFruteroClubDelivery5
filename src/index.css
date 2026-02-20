@@ -1,24 +1,40 @@
-/* CSS Variables for Dark Theme with Elemental Neon Accents */
+/* ========== Elemental Design System — AAA ========== */
 :root {
-    /* Background */
-    --bg-dark: #212529;
+    /* Deep Background */
+    --bg-dark: #0a0a0f;
+    --bg-panel: rgba(15, 15, 25, 0.85);
+    --bg-panel-hover: rgba(20, 20, 35, 0.95);
 
-    /* Neon Accents */
-    --neon-fire: #ff6b35;
-    --neon-water: #00d9ff;
-    --neon-earth: #7cb342;
-    --neon-air: #e0e0e0;
-    --neon-primary: #FFA500;
+    /* 🔥 Fuego */
+    --neon-fire: #ff4500;
+    --glow-fire: rgba(255, 69, 0, 0.4);
 
-    /* Text Colors */
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
+    /* 💧 Agua */
+    --neon-water: #00e5ff;
+    --glow-water: rgba(0, 229, 255, 0.4);
 
-    /* Border */
-    --border-color: #444;
+    /* 🌿 Tierra */
+    --neon-earth: #76ff03;
+    --glow-earth: rgba(118, 255, 3, 0.3);
+
+    /* 💨 Aire */
+    --neon-air: #e0b0ff;
+    --glow-air: rgba(224, 176, 255, 0.3);
+
+    /* ⭐ Primary (Gold) */
+    --neon-primary: #ffab00;
+    --glow-primary: rgba(255, 171, 0, 0.4);
+
+    /* Text */
+    --text-primary: #f0f0f0;
+    --text-secondary: #8a8a9a;
+
+    /* Borders */
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(255, 255, 255, 0.15);
 }
 
-/* Global Styles */
+/* ========== Global Reset ========== */
 * {
     margin: 0;
     padding: 0;
@@ -28,10 +44,16 @@
 body {
     font-family: 'Press Start 2P', 'Courier New', monospace;
     background: var(--bg-dark);
+    background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(255, 69, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 90%, rgba(0, 229, 255, 0.04) 0%, transparent 50%);
+    background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
 }
 
 #root {
@@ -40,88 +62,120 @@ body {
     flex-direction: column;
 }
 
-/* Screen base styles */
+/* ========== Screen Base ========== */
 .screen {
     flex: 1;
-    min-height: calc(100vh - 60px); /* Account for Header height */
-    background-color: var(--bg-dark);
+    min-height: calc(100vh - 60px);
+    background-color: transparent;
     color: var(--text-primary);
 }
 
 .leaderboard-screen {
-    background: linear-gradient(180deg, #1a1a2e 0%, var(--bg-dark) 100%);
+    background: linear-gradient(180deg, rgba(26, 26, 46, 0.9) 0%, transparent 100%);
 }
 
-/* SNES.css Overrides for Dark Theme */
+/* ========== NES.css Overrides — Dark + Neon ========== */
 .nes-input {
-    background-color: rgba(0, 0, 0, 0.3) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
     color: var(--text-primary) !important;
-    border-color: var(--border-color) !important;
+    border-color: var(--border-glow) !important;
+    transition: all 0.3s ease;
 }
 
 .nes-input:focus {
     border-color: var(--neon-primary) !important;
-    box-shadow: 0 0 10px rgba(204, 132, 0, 0.5) !important;
+    box-shadow: 0 0 15px var(--glow-primary), inset 0 0 8px rgba(255, 171, 0, 0.1) !important;
 }
 
+/* Buttons — Neon Glow */
 .nes-btn {
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+    position: relative;
 }
 
 .nes-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .nes-btn:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(-1px);
 }
 
 .nes-btn.is-primary {
     background-color: var(--neon-primary) !important;
     border-color: var(--neon-primary) !important;
+    box-shadow: 0 0 12px var(--glow-primary), inset 0 -3px rgba(0, 0, 0, 0.2);
+}
+
+.nes-btn.is-primary:hover:not(:disabled) {
+    box-shadow: 0 0 25px var(--glow-primary), 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nes-btn.is-error {
     background-color: var(--neon-fire) !important;
     border-color: var(--neon-fire) !important;
+    box-shadow: 0 0 12px var(--glow-fire), inset 0 -3px rgba(0, 0, 0, 0.2);
+}
+
+.nes-btn.is-error:hover:not(:disabled) {
+    box-shadow: 0 0 25px var(--glow-fire), 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nes-btn.is-warning {
     background-color: #ffa500 !important;
     border-color: #ffa500 !important;
+    box-shadow: 0 0 12px rgba(255, 165, 0, 0.4), inset 0 -3px rgba(0, 0, 0, 0.2);
+}
+
+.nes-btn.is-warning:hover:not(:disabled) {
+    box-shadow: 0 0 25px rgba(255, 165, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .nes-btn.is-success {
     background-color: var(--neon-earth) !important;
     border-color: var(--neon-earth) !important;
+    color: #0a0a0f !important;
+    box-shadow: 0 0 12px var(--glow-earth), inset 0 -3px rgba(0, 0, 0, 0.2);
 }
 
+.nes-btn.is-success:hover:not(:disabled) {
+    box-shadow: 0 0 25px var(--glow-earth), 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Progress Bars — Neon Glow */
 .nes-progress {
     height: 24px !important;
+    border-color: var(--border-glow) !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
 }
 
 .nes-progress.is-error::-webkit-progress-value {
     background-color: var(--neon-fire) !important;
+    box-shadow: 0 0 10px var(--glow-fire);
 }
 
 .nes-progress.is-warning::-webkit-progress-value {
-    background-color: #ffa500 !important;
+    background-color: var(--neon-air) !important;
+    box-shadow: 0 0 10px var(--glow-air);
 }
 
 .nes-progress.is-success::-webkit-progress-value {
     background-color: var(--neon-earth) !important;
+    box-shadow: 0 0 10px var(--glow-earth);
 }
 
+/* Dark Container */
 .nes-container.is-dark {
-    background-color: rgba(0, 0, 0, 0.5) !important;
-    border-color: var(--border-color) !important;
+    background-color: var(--bg-panel) !important;
+    border-color: var(--border-glow) !important;
+    backdrop-filter: blur(8px);
 }
 
-/* Scrollbar Styling */
+/* ========== Scrollbar ========== */
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -129,20 +183,21 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--neon-primary);
+    box-shadow: 0 0 8px var(--glow-primary);
 }
 
-/* Utility Classes */
+/* ========== Utilities ========== */
 .hidden {
     display: none !important;
 }
 
-/* Responsive Typography */
+/* ========== Responsive ========== */
 @media (max-width: 768px) {
     body {
         font-size: 14px;
